@@ -2,94 +2,98 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SlugTrait;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FigureRepository::class)]
 class Figure
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
-    #[ORM\Column(length: 150)]
-    private ?string $name = null;
+  use SlugTrait;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description = null;
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column]
+  private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+  #[ORM\Column(length: 150)]
+  private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imgName = null;
+  #[ORM\Column(length: 255)]
+  private ?string $description = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $vidName = null;
+  #[ORM\Column(length: 255)]
+  private ?string $type = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $imgName = null;
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $vidName = null;
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
+  public function getId(): ?int
+  {
+    return $this->id;
+  }
 
-        return $this;
-    }
+  public function getName(): ?string
+  {
+    return $this->name;
+  }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+  public function setName(string $name): self
+  {
+    $this->name = $name;
 
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getDescription(): ?string
+  {
+    return $this->description;
+  }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
+  public function setDescription(string $description): self
+  {
+    $this->description = $description;
 
-    public function setType(string $type): self
-    {
-        $this->type = $type;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getType(): ?string
+  {
+    return $this->type;
+  }
 
-    public function getImgName(): ?string
-    {
-        return $this->imgName;
-    }
+  public function setType(string $type): self
+  {
+    $this->type = $type;
 
-    public function setImgName(?string $imgName): self
-    {
-        $this->imgName = $imgName;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getImgName(): ?string
+  {
+    return $this->imgName;
+  }
 
-    public function getVidName(): ?string
-    {
-        return $this->vidName;
-    }
+  public function setImgName(?string $imgName): self
+  {
+    $this->imgName = $imgName;
 
-    public function setVidName(?string $vidName): self
-    {
-        $this->vidName = $vidName;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getVidName(): ?string
+  {
+    return $this->vidName;
+  }
+
+  public function setVidName(?string $vidName): self
+  {
+    $this->vidName = $vidName;
+
+    return $this;
+  }
 }
