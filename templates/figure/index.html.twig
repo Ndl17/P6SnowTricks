@@ -34,7 +34,6 @@ margin-left: 15px;
 
 
   {% include "_partials/_nav.html.twig" %}
-  {{dump() }}
   <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
     <div class="container">
       <div class="row">
@@ -56,7 +55,7 @@ margin-left: 15px;
           <img src="assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           <div class="card-body">
             <h5 class="heading mb-3">
-              <a href="Pages.Blog.Detail.html" class="body-link stretched-link">
+              <a href="#" class="body-link stretched-link" data-bs-target="#{{ figure.slug }}" data-bs-toggle="modal">
                 <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
               </a>
             </h5>
@@ -85,8 +84,6 @@ margin-left: 15px;
     </div>
 
   </div>
-
-
 
 </body>
 {% endblock %}

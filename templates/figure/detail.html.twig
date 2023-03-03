@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<style>
+
+.title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 30px;
+  color: white;
+}
+
+.view {
+  position: relative;
+  background-size: cover;
+  height: 80vw;
+  width: 100vw;
+}
+
+#gridCards{
+
+  height: 80vw;
+  width: 100vw;
+}
+
+</style>
+
+<body>
+
+
+  {% include "_partials/_nav.html.twig" %}
+  <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="title" data-wow-delay="0.4s"><strong>{{ figure.name }}</strong></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Grid Start -->
+
+
+  <div class="container">
+    <div class="row mt-5">
+
+      <!-- Card Film 1 -->
+
+      <div class="col-3">
+        <div class="card">
+
+
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film1">
+            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Card Film 2 -->
+
+      <div class="col-3">
+        <div class="card">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film2">
+            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Card Film 3 -->
+
+      <div class="col-3">
+        <div class="card mb-5">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film3">
+            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          </button>
+        </div>
+      </div>
+
+
+      <div class="col-3">
+        <div class="card mb-5">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film3">
+            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <p class="text-center">{{figure.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Grid End -->
+
+
+
+
+
+</body>
+{% endblock %}
+{% block footer %}
+{% include "_partials/_footer.html.twig" %}
+{% endblock %}
