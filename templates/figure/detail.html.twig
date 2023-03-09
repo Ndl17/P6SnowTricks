@@ -44,6 +44,60 @@
     </div>
   </div>
 
+  <div class="row g-2 mt-5">
+    <div class="col-12 col-xl-4 mb-5">
+      <div class="card bg-gradient-light">
+        <div class="h-100 row g-0 card-body align-items-center">
+          <div class="col-auto">
+            <div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+              <i data-acorn-icon="calendar" class="text-white"></i>
+            </div>
+          </div>
+          <div class="col">
+            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le </div>
+          </div>
+          <div class="col-auto ps-3">
+            <div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4 mb-5">
+      <div class="card active">
+        <div class="h-100 row g-0 card-body align-items-center">
+          <div class="col-auto">
+            <div class="sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center border border-primary">
+              <i data-acorn-icon="loaf" class="text-primary"></i>
+            </div>
+          </div>
+          <div class="col">
+            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">Type</div>
+          </div>
+          <div class="col-auto ps-3">
+            <div class="display-5 text-primary">{{ figure.type }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-4 mb-5">
+      <div class="card bg-gradient-light">
+        <div class="h-100 row g-0 card-body align-items-center">
+          <div class="col-auto">
+            <div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+              <i data-acorn-icon="calendar" class="text-white"></i>
+            </div>
+          </div>
+          <div class="col">
+            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le </div>
+          </div>
+          <div class="col-auto ps-3">
+            <div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <!-- Grid Start -->
@@ -52,42 +106,42 @@
   <div class="container">
     <div class="row mt-5">
 
-      <!-- Card Film 1 -->
+      <!-- Card img 1 -->
 
       <div class="col-3">
         <div class="card">
 
 
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film1">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img1">
             <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           </button>
         </div>
       </div>
 
-      <!-- Card Film 2 -->
+      <!-- Card img 2 -->
 
       <div class="col-3">
         <div class="card">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film2">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img2">
             <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           </button>
         </div>
       </div>
 
-      <!-- Card Film 3 -->
+      <!-- Card img 3 -->
 
       <div class="col-3">
         <div class="card mb-5">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film3">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img3">
             <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           </button>
         </div>
       </div>
 
-
+      <!-- Card img 4 -->
       <div class="col-3">
         <div class="card mb-5">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#film3">
+          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img4">
             <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           </button>
         </div>
@@ -101,6 +155,7 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
+            <h1 class="text-center font-weight-bold">{{figure.name}}</h1>
             <p class="text-center">{{figure.description}}</p>
           </div>
         </div>

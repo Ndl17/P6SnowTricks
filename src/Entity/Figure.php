@@ -32,6 +32,12 @@ class Figure
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $vidName = null;
 
+  #[ORM\Column]
+  private ?\DateTimeImmutable $created_at = null;
+
+  #[ORM\Column]
+  private ?\DateTimeImmutable $modified_at = null;
+
   public function getId(): ?int
   {
     return $this->id;
@@ -95,5 +101,29 @@ class Figure
     $this->vidName = $vidName;
 
     return $this;
+  }
+
+  public function getCreatedAt(): ?\DateTimeImmutable
+  {
+      return $this->created_at;
+  }
+
+  public function setCreatedAt(\DateTimeImmutable $created_at): self
+  {
+      $this->created_at = $created_at;
+
+      return $this;
+  }
+
+  public function getModifiedAt(): ?\DateTimeImmutable
+  {
+      return $this->modified_at;
+  }
+
+  public function setModifiedAt(\DateTimeImmutable $modified_at): self
+  {
+      $this->modified_at = $modified_at;
+
+      return $this;
   }
 }
