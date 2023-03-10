@@ -3,16 +3,20 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-  <body class="h-100">
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+<body class="h-100">
+  <form method="post">
+    {% if app.flashes('error') %}
+        <div class="alert alert-danger">
+            {% for message in app.flashes('error') %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté.e {{ app.user.pseudo }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
+    <div class="mb-3">
+      Vous êtes connecté.e {{ app.user.pseudo }}, <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
     {% endif %}
 
     <div id="root" class="h-100">
@@ -52,8 +56,8 @@
                 <div>
                   <form id="loginForm" class="tooltip-end-bottom" novalidate>
                     <div class="mb-3 filled form-group tooltip-end-top">
-                      <i data-acorn-icon="email"></i>
-                      <input  type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus />
+                      <i data-acorn-icon="user"></i>
+                      <input  type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control" autocomplete="pseudo" required autofocus />
                     </div>
                     <div class="mb-3 filled form-group tooltip-end-top">
                       <i data-acorn-icon="lock-off"></i>
@@ -61,7 +65,7 @@
                       <a class="text-small position-absolute t-3 e-3" href="Pages.Authentication.ForgotPassword.html">Forgot?</a>
                     </div>
                     <input type="hidden" name="_csrf_token"
-                           value="{{ csrf_token('authenticate') }}"
+                    value="{{ csrf_token('authenticate') }}"
                     >
                     <button type="submit" class="btn btn-lg btn-primary">Login</button>
                   </form>
@@ -74,4 +78,4 @@
       </div>
     </div>
   </body>
-{% endblock %}
+  {% endblock %}

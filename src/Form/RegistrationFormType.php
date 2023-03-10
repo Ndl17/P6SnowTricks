@@ -19,13 +19,29 @@ class RegistrationFormType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
-    ->add('email', EmailType::class, [ 'attr' => ['class'=>'form-control'], 'label' => 'E-mail'])
-    ->add('pseudo', TextType::class, [ 'attr' => ['class'=>'form-control'], 'label' => 'Pseudo'])
+    ->add('email', EmailType::class, [
+      'attr' => ['class'=>'form-control'],
+      'label' => 'E-mail',
+      'constraints' => [
+        new NotBlank([
+          'message' => 'Renseignez un E-mail.',
+        ]),
+      ],
+    ])
+    ->add('pseudo', TextType::class, [
+      'attr' => ['class'=>'form-control'],
+      'label' => 'Pseudo',
+      'constraints' => [
+        new NotBlank([
+          'message' => 'Renseignez un pseudo.',
+        ]),
+      ],
+    ])
     ->add('agreeTerms', CheckboxType::class, [
       'mapped' => false,
       'constraints' => [
         new IsTrue([
-          'message' => 'You should agree to our terms.',
+          'message' => 'Vous devez valider notre politique.',
         ]),
       ],
     ])
@@ -40,11 +56,11 @@ class RegistrationFormType extends AbstractType
 
       'constraints' => [
         new NotBlank([
-          'message' => 'Please enter a password',
+          'message' => 'Renseignez un mot de passe',
         ]),
         new Length([
           'min' => 6,
-          'minMessage' => 'Your password should be at least {{ limit }} characters',
+          'minMessage' => 'Votre mot de passe doit avoir au moins {{ limit }} caractères',
           // max length allowed by Symfony for security reasons
           'max' => 4096,
         ]),
