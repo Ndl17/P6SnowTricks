@@ -21,13 +21,7 @@
   height: 80vw;
   width: 100vw;
 }
-/*
-#gridCards{
-margin-right: 30px;
-margin-left: 15px;
 
-}
-*/
 </style>
 
 <body>
@@ -48,17 +42,19 @@ margin-left: 15px;
   <div class="col-md-12 py-5 ml-5 mr-5">
     <!-- Grid Start -->
 
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
       {% for figure in figures %}
       <div class="col">
         <div class="card h-100" id="cards">
-          <img src="assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
           <div class="card-body">
             <h5 class="heading mb-3">
-              <a href="#" class="body-link stretched-link" data-bs-target="#{{ figure.slug }}" data-bs-toggle="modal">
+              <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link stretched-link" >
                 <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
               </a>
             </h5>
+              {% if app.user %}
             <div>
               <div class="row g-0">
                 <div class="col-auto pe-3">
@@ -69,6 +65,7 @@ margin-left: 15px;
                 </div>
               </div>
             </div>
+              {% endif %}
           </div>
         </div>
       </div>

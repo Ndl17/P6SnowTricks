@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Faker;
+use DateTimeImmutable;
 class FigureFixtures extends Fixture
 {
   public function __construct(private SluggerInterface $slugger){}
@@ -43,13 +44,13 @@ public function load(ObjectManager $manager): void
   for($i = 1; $i <= 10; $i++){
     $figure = new Figure();
     $figure->setName($faker->text(15));
-    $figure->setDescription($faker->text());
+    $figure->setDescription($faker->text(1000));
     $figure->setType($faker->text(15));
     $figure->setImgName($faker->text(15));
     $figure->setVidName($faker->text(15));
     $figure->setSlug($this->slugger->slug($figure->getName())->lower());
-    $figure->setCreatedAt($faker->date('Y_m_d'));
-    $figure->setModifiedAt($faker->date('Y_m_d'));
+    $figure->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));
+    $figure->setModifiedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));
     $manager->persist($figure);
   }
 
