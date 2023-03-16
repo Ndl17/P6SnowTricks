@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<style>
+
+.title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 30px;
+  color: white;
+}
+
+.view {
+  position: relative;
+  background-size: cover;
+  height: 80vw;
+  width: 100vw;
+}
+
+</style>
+
+<body>
+
+
+  {% include "_partials/_nav.html.twig" %}
+  <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="title" data-wow-delay="0.4s"><strong>SnowTricks Community</strong></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-12 py-5 ml-5 mr-5">
+    <!-- Grid Start -->
+
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
+      {% for figure in figures %}
+      <div class="col">
+        <div class="card h-100" id="cards">
+          <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          <div class="card-body">
+            <h5 class="heading mb-3">
+              <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link stretched-link" >
+                <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
+              </a>
+            </h5>
+              {% if app.user %}
+            <div>
+              <div class="row g-0">
+                <div class="col-auto pe-3">
+                  <i data-acorn-icon="edit" class="text-primary me-1" data-acorn-size="15"></i>
+                </div>
+                <div class="col">
+                  <i data-acorn-icon="bin" class="text-primary me-1" data-acorn-size="15"></i>
+                </div>
+              </div>
+            </div>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Grid End -->
+
+    <div class="row">
+      <div class="col-12 text-center">
+        <button class="btn btn-xl btn-outline-primary sw-30">Load More</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+{% endblock %}
+{% block footer %}
+{% include "_partials/_footer.html.twig" %}
+{% endblock %}
