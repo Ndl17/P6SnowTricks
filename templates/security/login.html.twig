@@ -4,14 +4,11 @@
 
 {% block body %}
 <body class="h-100">
-  <form method="post">
-    {% if app.flashes('error') %}
-        <div class="alert alert-danger">
-            {% for message in app.flashes('error') %}
-                <div>{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
+  {% for message in app.flashes('error') %}
+  <div class="alert alert-danger">{{ message }}</div>
+  {% endfor %}
+  <form method="post"  target="_self">
+
 
     {% if app.user %}
     <div class="mb-3">

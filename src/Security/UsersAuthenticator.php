@@ -14,45 +14,58 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class UsersAuthenticator extends AbstractLoginFormAuthenticator
 {
-    use TargetPathTrait;
+  use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+  public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
+  public function __construct(private UrlGeneratorInterface $urlGenerator)
+  {
+  }
+
+  public function authenticate(Request $request): Passport
+  {
+    $pseudo = $request->request->get('pseudo', '');
+
+    $request->getSession()->set(Security::LAST_USERNAME, $pseudo);
+
+    return new Passport(
+      new UserBadge($pseudo),
+      new PasswordCredentials($request->request->get('password', '')),
+      [
+        new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+      ]
+    );
+  }
+
+  public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+  {
+    if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+      return new RedirectResponse($targetPath);
     }
 
-    public function authenticate(Request $request): Passport
-    {
-      $pseudo = $request->request->get('pseudo', '');
+    // For example:
+    return new RedirectResponse($this->urlGenerator->generate('home'));
+    //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+  }
 
-      $request->getSession()->set(Security::LAST_USERNAME, $pseudo);
 
-      return new Passport(
-          new UserBadge($pseudo),
-          new PasswordCredentials($request->request->get('password', '')),
-          [
-              new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-          ]
-      );
-    }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+  protected function getLoginUrl(Request $request): string
+  {
+    return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+  }
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('home'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    }
+  public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+  {
+    $request->getSession()->getFlashBag()->add('error', 'Invalid credentials.');
 
-    protected function getLoginUrl(Request $request): string
-    {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
-    }
+    // Redirect back to the login page
+    $loginUrl = $this->getLoginUrl($request);
+    return new RedirectResponse($loginUrl);
+  }
+
 }
