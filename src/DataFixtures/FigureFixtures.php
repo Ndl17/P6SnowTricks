@@ -40,7 +40,6 @@ public function load(ObjectManager $manager): void
 {
   // use the factory to create a Faker\Generator instance
   $faker = Faker\Factory::create('fr_FR');
-
   for($i = 1; $i <= 10; $i++){
     $figure = new Figure();
     $figure->setName($faker->text(15));
@@ -52,8 +51,13 @@ public function load(ObjectManager $manager): void
     $figure->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));
     $figure->setModifiedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));
     $manager->persist($figure);
-  }
 
+    $this->setReference('figure_' . $i, $figure);
+
+  }
   $manager->flush();
+
 }
+
+
 }
