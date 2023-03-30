@@ -43,6 +43,10 @@ class Figure
   #[ORM\OneToMany(mappedBy: 'idFigure', targetEntity: Comment::class, orphanRemoval: true)]
   private Collection $comments;
 
+  #[ORM\ManyToOne(inversedBy: 'figures')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?User $userId = null;
+
   public function __construct()
   {
       $this->comments = new ArrayCollection();
@@ -163,6 +167,18 @@ class Figure
               $comment->setIdFigure(null);
           }
       }
+
+      return $this;
+  }
+
+  public function getUserId(): ?User
+  {
+      return $this->userId;
+  }
+
+  public function setUserId(?User $userId): self
+  {
+      $this->userId = $userId;
 
       return $this;
   }

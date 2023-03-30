@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Comment;
 use App\Repository\FigureRepository;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,10 +26,15 @@ class FigureController extends AbstractController
 
 
   #[Route('/{slug}', name: 'details')]
-  public function detail(Figure $figure): Response
+  public function detail(Figure $figure, CommentRepository $commentRepository): Response
   {
-    return $this->render('figure/detail.html.twig', compact('figure'));
-  }
 
+    $comments = $commentRepository->findCommentsByFigure($figure->getId());
+
+    return $this->render('figure/detail.html.twig', [
+      'figure' => $figure,
+      'comments' => $comments,
+    ]);
+  }
 
 }
