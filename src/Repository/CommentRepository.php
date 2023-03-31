@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,19 +42,35 @@ class CommentRepository extends ServiceEntityRepository
 
 
 
-  public function findCommentsByFigure($figureId)
+  public function findCommentsByFigurePaginated($figureId, $page = 1, $limit = 10)
   {
+    $limit = abs($limit);
     $qb = $this->createQueryBuilder('c');
-    $qb->select('c.id, c.content, c.created_at, u.pseudo')
+    $qb->select('c')
+    ->addSelect('u.pseudo, c.content, c.created_at')
     ->leftJoin('c.idPseudo', 'u')
     ->leftJoin('c.idFigure', 'f')
-    ->addSelect('f.id')
     ->where('f.id = :figure_id')
     ->setParameter('figure_id', $figureId)
-    ->orderBy('c.created_at', 'DESC');
+    ->orderBy('c.created_at', 'DESC')
+    ->setMaxResults($limit)
+    ->setFirstResult(($page * $limit) - $limit);
+    $paginator = new Paginator($qb);
+    $data = $paginator->getQuery()->getResult();
 
-    $query = $qb->getQuery();
-    $result = $query->getResult();
+    //On vérifie qu'on a des données
+  
+
+    //On calcule le nombre de pages
+    $pages = ceil($paginator->count() / $limit);
+//dd($paginator);
+
+    $result['data'] = $data;
+    $result['pages'] = $pages;
+    $result['page'] = $page;
+    $result['limit'] = $limit;
+  //  dd($result);
     return $result;
+
   }
 }
