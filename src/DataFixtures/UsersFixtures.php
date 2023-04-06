@@ -21,9 +21,11 @@ class UsersFixtures extends Fixture
       $user->setEmail($faker->unique()->email);
       $user->setRoles(["user"]);
       $user->setPassword(password_hash($faker->password(15), PASSWORD_BCRYPT));
-      $user->setPseudo($faker->firstName(20));
+      $user->setPseudo($faker->unique()->firstName(20));
       $manager->persist($user);
+        $this->setReference('user_' . $i, $user);
     }
+
 
     $manager->flush();
   }

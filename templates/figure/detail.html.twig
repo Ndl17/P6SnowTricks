@@ -65,6 +65,26 @@
 }
 
 
+.commentContent{
+  margin-left: 10px;
+}
+
+#profilePic{
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.shadow{
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10) !important;
+}
+
+label{
+  display: none !important;
+}
+
+#comment_form_Envoyer{
+  margin-top: 10px
+}
 
 </style>
 
@@ -221,20 +241,62 @@
         <div class="card">
           <div class="card-body">
             <h1 class="text-center font-weight-bold">Commentaires</h1>
-            <p class="text-center">ESPACE POUR LES COMMENTAIRES A CONSTRUIRE</p>
+            {% for comment in comments.data %}
+
+            <div class="d-flex mb-3 rounded shadow">
+              <img src="../assets/img/profile/profile-9.webp" class="align-self-start mr-3 rounded-circle" alt="" style="width:64px;height:64px;" id="profilePic">
+              <div class="media-body commentContent">
+                <h5 class="mt-0 fw-bold">{{ comment.pseudo}}</h5>
+                <p>{{ comment.content}}</p>
+                <h6 style="margin-top=-6px">Publié le : {{ comment.created_at|date('Y-m-d')}}</h6>
+              </div>
+            </div>
+
+
+            {% endfor %}
+            {% set path = 'home_details' %}
+            {% set slug = figure.slug %}
+            {% set pages = comments.pages %}
+            {% set currentPage = comments.page %}
+            {% include "_partials/_pagination.html.twig" %}
+          </div>
+
+        </div>
+        {% if app.user %}
+
+        <div class="card mt-5 mb-5">
+          <div class="card-body">
+            {% for label, messages in app.flashes %}
+            {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endfor %}
+            <h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
+            <div class="col">
+              {{form(commentForm)}}
+            </div>
           </div>
         </div>
+
+        {% else %}
+        <div class="card mt-5 mb-5">
+          <div class="card-body">
+            <h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
+            <div class="col">
+              <h5> Veuillez vous <a href="{{path ('app_login')}}">connecter</a> pour pouvoir ajouter un commentaire</h5>
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
 
   <!-- Grid End -->
-
-
-
-
-
 </body>
+
 {% endblock %}
 {% block footer %}
 {% include "_partials/_footer.html.twig" %}
