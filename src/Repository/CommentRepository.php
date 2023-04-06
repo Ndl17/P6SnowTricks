@@ -58,18 +58,14 @@ class CommentRepository extends ServiceEntityRepository
     $paginator = new Paginator($qb);
     $data = $paginator->getQuery()->getResult();
 
-    //On vérifie qu'on a des données
-  
-
     //On calcule le nombre de pages
     $pages = ceil($paginator->count() / $limit);
-//dd($paginator);
 
     $result['data'] = $data;
     $result['pages'] = $pages;
     $result['page'] = $page;
     $result['limit'] = $limit;
-  //  dd($result);
+
     return $result;
 
   }
