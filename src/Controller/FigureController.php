@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+//use App\Security\Voter\FigureVoter;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -28,8 +29,12 @@ class FigureController extends AbstractController
       'figures' => $figureRepository->findBy([],['name' => 'asc']),
     ]);
   }
-
-
+  
+  #[Route('/ajout', name: 'add')]
+  public function addFigure(){
+    //$this->denyAccessUnlessGranted('ROLE_USER');
+    return $this->render('figure/addFigure.html.twig');
+  }
 
   #[Route('/{slug}', name: 'details')]
   public function detail(Figure $figure, CommentRepository $commentRepository, Request $request, EntityManagerInterface $entityManager): Response
@@ -44,31 +49,40 @@ class FigureController extends AbstractController
     $commentForm->handleRequest($request);
     // traitement formulaire
     if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+      $this->denyAccessUnlessGranted('ROLE_USER');
       $user = $this->getUser();
-      if ($user == null ) {
-        $this->addFlash('error', 'Vous n\'êtes pas connecté !');
-        return $this->redirectToRoute('app_login');
-      }else {
+      $now = new DateTime();
+      $createdAt = DateTimeImmutable::createFromMutable($now)->setTimezone(new DateTimeZone('UTC'));
+      $comment->setCreatedAt($createdAt);
+      $comment->setIdPseudo($user);
+      $comment->setIdFigure($figure);
+      $entityManager->persist($comment);
+      $entityManager->flush();
+      $this->addFlash('success', 'Votre commentaire a bien été envoyé !');
+      return $this->redirectToRoute('home_details', ['slug' => $figure->getSlug()]);
 
-        $now = new DateTime();
-        $createdAt = DateTimeImmutable::createFromMutable($now)->setTimezone(new DateTimeZone('UTC'));
-        $comment->setCreatedAt($createdAt);
-        $comment->setIdPseudo($user);
-        $comment->setIdFigure($figure);
-        $entityManager->persist($comment);
-        $entityManager->flush();
-        $this->addFlash('success', 'Votre commentaire a bien été envoyé !');
-        return $this->redirectToRoute('home_details', ['slug' => $figure->getSlug()]);      }
-      }
-
-
-
-      return $this->render('figure/detail.html.twig', [
-        'figure' => $figure,
-        'comments' => $comments,
-        'commentForm' => $commentForm->createView(),
-      ]);
     }
 
 
+
+    return $this->render('figure/detail.html.twig', [
+      'figure' => $figure,
+      'comments' => $comments,
+      'commentForm' => $commentForm->createView(),
+    ]);
   }
+
+  #[Route('/{slug}/supprimer', name: 'delete')]
+  public function deleteFig(Figure $figure, EntityManagerInterface $entityManager): Response{
+    $this->denyAccessUnlessGranted('ROLE_USER');
+    $entityManager->remove($figure);
+    $entityManager->flush();
+    $this->addFlash('success', 'La figure a bien été supprimée !');
+    return $this->redirectToRoute('home_index');
+
+
+  }
+
+
+
+}
