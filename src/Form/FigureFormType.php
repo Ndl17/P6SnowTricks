@@ -18,9 +18,19 @@ class FigureFormType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
-    ->add('name')
-    ->add('description')
-    ->add('type')
+    ->add('name', TextType::class, [
+      'label' => 'Nom de la figure',
+      'attr' => ['class'=>'form-control'],
+    ])
+    ->add('description', TextareaType::class, [
+      'label' => 'Décrivez votre figure',
+      'attr' => ['class'=>'form-control'],
+    ])
+    //a changer en select plus tard
+    ->add('type', TextType::class, [
+      'label' => 'Groupe de figure',
+      'attr' => ['class'=>'form-control'],
+    ])
     ->add('imgName', HiddenType::class, [
       'mapped' => false,
     ])
@@ -39,13 +49,15 @@ class FigureFormType extends AbstractType
     ->add('userId', HiddenType::class, [
       'mapped' => false,
     ])
-    ;
-  }
+    ->add('Envoyer', SubmitType::class ,['attr' => ['class'=>'btn btn-primary'],
+  ])
+  ;
+}
 
-  public function configureOptions(OptionsResolver $resolver): void
-  {
-    $resolver->setDefaults([
-      'data_class' => Figure::class,
-    ]);
-  }
+public function configureOptions(OptionsResolver $resolver): void
+{
+  $resolver->setDefaults([
+    'data_class' => Figure::class,
+  ]);
+}
 }

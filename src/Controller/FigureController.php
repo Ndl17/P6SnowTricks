@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Entity\Comment;
 use App\Repository\FigureRepository;
 use App\Form\CommentFormType;
+use App\Form\FigureFormType;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,11 +30,31 @@ class FigureController extends AbstractController
       'figures' => $figureRepository->findBy([],['name' => 'asc']),
     ]);
   }
-  
+
   #[Route('/ajout', name: 'add')]
-  public function addFigure(){
-    //$this->denyAccessUnlessGranted('ROLE_USER');
-    return $this->render('figure/addFigure.html.twig');
+  public function addFig(Request $request, EntityManagerInterface $entityManager): Response
+  {
+
+    $this->denyAccessUnlessGranted('ROLE_USER');
+    $figure = new Figure;
+    $form = $this->createForm(FigureFormType::class, $figure);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+      $now = new DateTime();
+      $createdAt = DateTimeImmutable::createFromMutable($now)->setTimezone(new DateTimeZone('UTC'));
+      $figure->setCreatedAt($createdAt);
+      $figure->setModifiedAt($createdAt);
+      $slug = strtolower(str_replace(' ', '-', $figure->getName()));
+      $figure->setSlug($slug);
+      $figure->setUserId($this->getUser());
+      $entityManager->persist($figure);
+      $entityManager->flush();
+      $this->addFlash('success', 'La figure a bien été ajoutée !');
+      return $this->redirectToRoute('home_index');
+    }
+    return $this->render('figure/addFigure.html.twig', [
+      'figureForm' => $form->createView(),
+    ]);
   }
 
   #[Route('/{slug}', name: 'details')]

@@ -7,16 +7,21 @@
 
 
 </style>
-
+{% include "_partials/_nav.html.twig" %}
 <body>
-  {% include "_partials/_nav.html.twig" %}
+
+  <div class="container">
+    <div class="row" style="margin-top: 100px !important;">
+      <div class="col-md-12">
+        <h1>Formulaire de création d'une figure </h1>
+        {{form(figureForm)}}
+      </div>
 
 
 
+    </body>
 
-</body>
-
-{% endblock %}
-{% block footer %}
-{% include "_partials/_footer.html.twig" %}
-{% endblock %}
+    {% endblock %}
+    {% block footer %}
+    {% include "_partials/_footer.html.twig" %}
+    {% endblock %}
