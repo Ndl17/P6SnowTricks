@@ -45,9 +45,7 @@ public function load(ObjectManager $manager): void
     $figure = new Figure();
     $figure->setName($faker->text(15));
     $figure->setDescription($faker->text(1000));
-    $figure->setType($faker->text(15));
-    $figure->setImgName($faker->text(15));
-    $figure->setVidName($faker->text(15));
+    //$figure->setType($faker->text(15));
     $figure->setSlug($this->slugger->slug($figure->getName())->lower());
     $figure->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));
     $figure->setModifiedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $faker->date('Y-m-d H:i:s')));

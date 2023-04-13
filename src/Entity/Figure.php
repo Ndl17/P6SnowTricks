@@ -25,15 +25,6 @@ class Figure
   #[ORM\Column(length: 255)]
   private ?string $description = null;
 
-  #[ORM\Column(length: 255)]
-  private ?string $type = null;
-
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $imgName = null;
-
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $vidName = null;
-
   #[ORM\Column]
   private ?\DateTimeImmutable $created_at = null;
 
@@ -47,9 +38,17 @@ class Figure
   #[ORM\JoinColumn(nullable: false)]
   private ?User $userId = null;
 
+
+  #[ORM\ManyToOne(inversedBy: 'figures')]
+  private ?groupe $groupe = null;
+
+  #[ORM\OneToMany(mappedBy: 'figure', targetEntity: images::class)]
+  private Collection $image;
+
   public function __construct()
   {
       $this->comments = new ArrayCollection();
+      $this->image = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -77,42 +76,6 @@ class Figure
   public function setDescription(string $description): self
   {
     $this->description = $description;
-
-    return $this;
-  }
-
-  public function getType(): ?string
-  {
-    return $this->type;
-  }
-
-  public function setType(string $type): self
-  {
-    $this->type = $type;
-
-    return $this;
-  }
-
-  public function getImgName(): ?string
-  {
-    return $this->imgName;
-  }
-
-  public function setImgName(?string $imgName): self
-  {
-    $this->imgName = $imgName;
-
-    return $this;
-  }
-
-  public function getVidName(): ?string
-  {
-    return $this->vidName;
-  }
-
-  public function setVidName(?string $vidName): self
-  {
-    $this->vidName = $vidName;
 
     return $this;
   }
@@ -179,6 +142,50 @@ class Figure
   public function setUserId(?User $userId): self
   {
       $this->userId = $userId;
+
+      return $this;
+  }
+
+
+
+  public function getGroupe(): ?groupe
+  {
+      return $this->groupe;
+  }
+
+  public function setGroupe(?groupe $groupe): self
+  {
+      $this->groupe = $groupe;
+
+      return $this;
+  }
+
+  /**
+   * @return Collection<int, images>
+   */
+  public function getImage(): Collection
+  {
+      return $this->image;
+  }
+
+  public function addImage(images $image): self
+  {
+      if (!$this->image->contains($image)) {
+          $this->image->add($image);
+          $image->setFigure($this);
+      }
+
+      return $this;
+  }
+
+  public function removeImage(images $image): self
+  {
+      if ($this->image->removeElement($image)) {
+          // set the owning side to null (unless already changed)
+          if ($image->getFigure() === $this) {
+              $image->setFigure(null);
+          }
+      }
 
       return $this;
   }
