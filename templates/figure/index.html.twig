@@ -43,14 +43,24 @@
     <!-- Grid Start -->
 
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
-      {% for figure in figures %}
-      <div class="col">
-        <div class="card h-100" id="cards">
-          <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
-          <div class="card-body">
-            <div class='card-heading'>
-              <h5 class="heading mb-3">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
+  {% for figure in figures %}
+    <div class="col">
+      <div class="card h-100" id="cards">
+   {% if figure.getImage()|length > 0 %}
+      {% set firstImage = true %}
+   {% for image in figure.getImage() %}
+      {% if firstImage and image %}
+      <img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image" />
+      {% set firstImage = false %}
+  {% endif %}
+  {% endfor %}
+    {% else %}
+  <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+{% endif %}
+        <div class="card-body">
+          <div class='card-heading'>
+            <h5 class="heading mb-3">
                 <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link" >
                   <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
                 </a>
@@ -75,6 +85,8 @@
 
       </div>
     </div>
+        
+
     {% endfor %}
   </div>
 

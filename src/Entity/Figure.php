@@ -40,9 +40,9 @@ class Figure
 
 
   #[ORM\ManyToOne(inversedBy: 'figures')]
-  private ?groupe $groupe = null;
+  private ?Groupe $groupe = null;
 
-  #[ORM\OneToMany(mappedBy: 'figure', targetEntity: images::class)]
+  #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
   private Collection $image;
 
   public function __construct()

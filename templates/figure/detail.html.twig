@@ -99,13 +99,18 @@ label{
 
 
   {% include "_partials/_nav.html.twig" %}
+        {% if figure.getImage()|length > 0 %}
+  <div class="view" style="background-image: url('{{ asset('uploads/images/' ~ firstImage.slug) }}');">
+  {% else %}
   <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
-
-
+          {% endif %}
     <div class="container">
       <div class="row">
         <div class="col-md-12">
+   
           <h1 class="title" data-wow-delay="0.4s"><strong>{{ figure.name }}</strong></h1>
+        
+         
           {% if app.user %}
           <div class="iconEdit">
             <a href="#" >
@@ -151,10 +156,10 @@ label{
             </div>
           </div>
           <div class="col">
-            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">Type</div>
+            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3"> {{ figure.getGroupe().name}}</div>
           </div>
           <div class="col-auto ps-3">
-            <div class="display-5 text-primary">{{ figure.type }}</div>
+            <div class="display-5 text-primary"></div>
           </div>
         </div>
       </div>
@@ -173,7 +178,7 @@ label{
           <div class="col-auto ps-3">
             <div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
           </div>
-        </div>
+       </div>
       </div>
     </div>
   </div>
@@ -186,42 +191,18 @@ label{
     <div class="row mt-5 mb-5">
 
       <!-- Card img 1 -->
-
+{% for image in figure.getImage() %}
       <div class="col-3 img_responsive">
         <div class="card">
           <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img1">
-            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+            <img src="{{ asset('uploads/images/' ~ image.slug) }}"  class="card-img-top sh-19" alt="card image" />
           </button>
         </div>
       </div>
-
+{% endfor %}
       <!-- Card img 2 -->
 
-      <div class="col-3 img_responsive">
-        <div class="card">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img2">
-            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Card img 3 -->
-
-      <div class="col-3 img_responsive">
-        <div class="card ">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img3">
-            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
-          </button>
-        </div>
-      </div>
-
-      <div class="col-3 img_responsive">
-        <div class="card">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img3">
-            <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
-          </button>
-        </div>
-      </div>
+   
 
     </div>
   </div>
@@ -298,7 +279,8 @@ label{
     </div>
   </div>
 
-  
+
+
   <!-- Grid End -->
 </body>
 
