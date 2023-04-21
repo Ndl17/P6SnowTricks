@@ -4,17 +4,9 @@
 
 {% block body %}
 <body class="h-100">
-  {% for message in app.flashes('error') %}
-  <div class="alert alert-danger">{{ message }}</div>
-  {% endfor %}
-  <form method="post"  target="_self">
 
 
-    {% if app.user %}
-    <div class="mb-3">
-      Vous êtes connecté.e {{ app.user.pseudo }}, <a href="{{ path('app_logout') }}">Logout</a>
-    </div>
-    {% endif %}
+
 
     <div id="root" class="h-100">
       <!-- Background Start -->
@@ -51,10 +43,14 @@
                   </p>
                 </div>
                 <div>
-                  <form id="loginForm" class="tooltip-end-bottom" novalidate>
+                  <form method="post" id="loginForm" class="tooltip-end-bottom">
+
+                        {% if error %}
+                                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                 {% endif %}
                     <div class="mb-3 filled form-group tooltip-end-top">
                       <i data-acorn-icon="user"></i>
-                      <input  type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control" autocomplete="pseudo" required autofocus />
+                      <input type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control" autocomplete="pseudo" required autofocus />
                     </div>
                     <div class="mb-3 filled form-group tooltip-end-top">
                       <i data-acorn-icon="lock-off"></i>
@@ -63,7 +59,8 @@
                     </div>
                     <input type="hidden" name="_csrf_token"
                     value="{{ csrf_token('authenticate') }}"
-                    >
+                >
+
                     <button type="submit" class="btn btn-lg btn-primary">Login</button>
                   </form>
                 </div>

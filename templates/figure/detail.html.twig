@@ -1,290 +1,341 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Hello MainController!
+{% endblock %}
 
 {% block body %}
-<style>
+	<style>
 
-.title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  font-size: 30px;
-  color: white;
-}
+		.title {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			font-size: 30px;
+			color: white;
+		}
 
-.view {
-  position: relative;
-  background-size: cover;
-  height: 80vw;
-  width: 100vw;
-}
+		.view {
+			position: relative;
+			background-size: cover;
+			height: 80vw;
+			width: 100vw;
+		}
 
-#gridCards{
+		#gridCards {
 
-  height: 80vw;
-  width: 100vw;
-}
+			height: 80vw;
+			width: 100vw;
+		}
 
-.edit-icon {
-  margin-left: 2px;
-  margin-right: 2px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
+		.edit-icon {
+			margin: 2px;
+		}
 
-.delete-icon {
-  margin-left: 2px;
-  margin-right: 2px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
+		.delete-icon {
+			margin: 2px;
+		}
 
-.iconEdit:hover, .iconBin:hover {
-  transform: scale(1.2);
-  z-index: 1;
-}
+		.iconEdit:hover,
+		.iconBin:hover {
+			transform: scale(1.2);
+			z-index: 1;
+		}
 
-.iconEdit{
-  position: absolute;
-  top: 100px;
-  right: 50px;
-  background-color: white;
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
-}
-.iconBin{
-  position: absolute;
-  top: 100px;
-  right: 100px;
-  background-color: white;
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
-}
+		.iconEdit {
+			position: absolute;
+			top: 100px;
+			right: 50px;
+			background-color: white;
+			border-radius: 5px;
+			transition: all 0.3s ease-in-out;
+		}
+		.iconBin {
+			position: absolute;
+			top: 100px;
+			right: 100px;
+			background-color: white;
+			border-radius: 5px;
+			transition: all 0.3s ease-in-out;
+		}
 
 
-.commentContent{
-  margin-left: 10px;
-}
+		.commentContent {
+			margin-left: 10px;
+		}
 
-#profilePic{
-  margin-top: 10px;
-  margin-left: 5px;
-}
+		#profilePic {
+			margin-top: 10px;
+			margin-left: 5px;
+		}
 
-.shadow{
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10) !important;
-}
+		.shadow {
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10) !important;
+		}
 
-label{
-  display: none !important;
-}
+		label {
+			display: none !important;
+		}
 
-#comment_form_Envoyer{
-  margin-top: 10px
-}
+		#comment_form_Envoyer {
+			margin-top: 10px
+		}
 
-@media screen and (max-width: 767px) {
-  .img_responsive {
-    display: block !important;
-    width: 100% !important;
-  }
-}
+		@media screen and(max-width: 767px) {
+			.img_responsive {
+				display: block !important;
+				width: 100% !important;
+			}
+		}
+	</style>
 
-</style>
-
-<body>
+	<body>
 
 
-  {% include "_partials/_nav.html.twig" %}
-        {% if figure.getImage()|length > 0 %}
-  <div class="view" style="background-image: url('{{ asset('uploads/images/' ~ firstImage.slug) }}');">
-  {% else %}
-  <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
-          {% endif %}
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-   
-          <h1 class="title" data-wow-delay="0.4s"><strong>{{ figure.name }}</strong></h1>
-        
-         
-          {% if app.user %}
-          <div class="iconEdit">
-            <a href="#" >
-              <i data-acorn-icon="edit" class="text-primary  edit-icon" data-acorn-size="30"></i>
-            </a>
+		{% include "_partials/_nav.html.twig" %}
+		{% if figure.getImage()|length > 0 %}
+			<div class="view" style="background-image: url('{{ asset('uploads/images/' ~ firstImage.slug) }}');">
+			{% else %}
+				<div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
+				{% endif %}
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+
+							<h1 class="title" data-wow-delay="0.4s">
+								<strong>{{ figure.name }}</strong>
+							</h1>
+
+
+							{% if app.user %}
+								<div class="iconEdit">
+									<a href="#">
+										<i data-acorn-icon="edit" class="text-primary  edit-icon" data-acorn-size="30"></i>
+									</a>
+								</div>
+								<div class="iconBin">
+									<a href="{{ path('home_delete', {slug:figure.slug}) }}">
+										<i data-acorn-icon="bin" class="text-primary  delete-icon" data-acorn-size="30"></i>
+									</a>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-2 mt-5">
+				<div class="col-12 col-xl-4 mb-5">
+					<div class="card bg-gradient-light">
+						<div class="h-100 row g-0 card-body align-items-center">
+							<div class="col-auto">
+								<div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+									<i data-acorn-icon="calendar" class="text-white"></i>
+								</div>
+							</div>
+							<div class="col">
+								<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le
+								</div>
+							</div>
+							<div class="col-auto ps-3">
+								<div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 col-xl-4 mb-5">
+					<div class="card active">
+						<div class="h-100 row g-0 card-body align-items-center">
+							<div class="col-auto">
+								<div class="sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center border border-primary">
+									<i data-acorn-icon="loaf" class="text-primary"></i>
+								</div>
+							</div>
+							<div class="col">
+								{% if figure.getGroupe()|length > 0 %}
+									<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">
+										{{ figure.getGroupe().name}}</div>
+								{% else %}
+									<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">
+										Pas de groupe
+									</div>
+								{%  endif %}
+							</div>
+							<div class="col-auto ps-3">
+								<div class="display-5 text-primary"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-xl-4 mb-5">
+					<div class="card bg-gradient-light">
+						<div class="h-100 row g-0 card-body align-items-center">
+							<div class="col-auto">
+								<div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+									<i data-acorn-icon="calendar" class="text-white"></i>
+								</div>
+							</div>
+							<div class="col">
+								<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le
+								</div>
+							</div>
+							<div class="col-auto ps-3">
+								<div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Grid Start -->
+
+
+			<div class="container">
+				<div class="row mt-5 mb-5">
+					{% for image in figure.getImage() %}
+						<div class="col-3 img_responsive d-none d-md-block">
+							<div>
+								<div class="card">
+									<button type="button" class="btn btn-primary btnfilm">
+										<img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image"/>
+									</button>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+			
+
+
+					{% for video in figure.getVideos() %}
+						<div class="col-3 img_responsive d-none d-md-block">
+							<div>
+								<button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img1">
+									<iframe src="{{ video.url }}" frameborder="0"></iframe>
+								</button>
+							</div>
+						</div>
+					{% endfor %}
+					<!-- Card img 2 -->
+
+
+				</div>
+			</div>
+     	<div class="container">
+				<div class="row">
+					<div class="col-12 d-md-none text-center mb-5">
+		<button type="button" class="btn btn-primary show-all-images">Afficher toutes les images</button>
+						<button type="button" class="btn btn-secondary hide-all-images d-none">Cacher toutes les images</button>
+
+
           </div>
-          <div class="iconBin">
-            <a href="{{ path('home_delete', {slug:figure.slug}) }}">
-              <i data-acorn-icon="bin" class="text-primary  delete-icon" data-acorn-size="30"></i>
-            </a>
           </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-2 mt-5">
-    <div class="col-12 col-xl-4 mb-5">
-      <div class="card bg-gradient-light">
-        <div class="h-100 row g-0 card-body align-items-center">
-          <div class="col-auto">
-            <div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
-              <i data-acorn-icon="calendar" class="text-white"></i>
-            </div>
-          </div>
-          <div class="col">
-            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le </div>
-          </div>
-          <div class="col-auto ps-3">
-            <div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-xl-4 mb-5">
-      <div class="card active">
-        <div class="h-100 row g-0 card-body align-items-center">
-          <div class="col-auto">
-            <div class="sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center border border-primary">
-              <i data-acorn-icon="loaf" class="text-primary"></i>
-            </div>
-          </div>
-          <div class="col">
-            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3"> {{ figure.getGroupe().name}}</div>
-          </div>
-          <div class="col-auto ps-3">
-            <div class="display-5 text-primary"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-xl-4 mb-5">
-      <div class="card bg-gradient-light">
-        <div class="h-100 row g-0 card-body align-items-center">
-          <div class="col-auto">
-            <div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
-              <i data-acorn-icon="calendar" class="text-white"></i>
-            </div>
-          </div>
-          <div class="col">
-            <div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le </div>
-          </div>
-          <div class="col-auto ps-3">
-            <div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
-          </div>
-       </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Grid Start -->
-
-
-  <div class="container">
-    <div class="row mt-5 mb-5">
-
-      <!-- Card img 1 -->
-{% for image in figure.getImage() %}
-      <div class="col-3 img_responsive">
-        <div class="card">
-          <button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img1">
-            <img src="{{ asset('uploads/images/' ~ image.slug) }}"  class="card-img-top sh-19" alt="card image" />
-          </button>
-        </div>
-      </div>
-{% endfor %}
-      <!-- Card img 2 -->
-
-   
-
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h1 class="text-center font-weight-bold">{{figure.name}}</h1>
-            <p class="text-center">{{figure.description}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container mt-5 mb-5">
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h1 class="text-center font-weight-bold">Commentaires</h1>
-            {% for comment in comments.data %}
-
-            <div class="d-flex mb-3 rounded shadow">
-              <img src="../assets/img/profile/profile-9.webp" class="align-self-start mr-3 rounded-circle" alt="" style="width:64px;height:64px;" id="profilePic">
-              <div class="media-body commentContent">
-                <h5 class="mt-0 fw-bold">{{ comment.pseudo}}</h5>
-                <p>{{ comment.content}}</p>
-                <h6 style="margin-top=-6px">Publié le : {{ comment.created_at|date('Y-m-d H:i')}}</h6>
-              </div>
-            </div>
-
-
-            {% endfor %}
-            {% set path = 'home_details' %}
-            {% set slug = figure.slug %}
-            {% set pages = comments.pages %}
-            {% set currentPage = comments.page %}
-            {% include "_partials/_pagination.html.twig" %}
           </div>
 
-        </div>
-        {% if app.user %}
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="card">
+							<div class="card-body">
+								<h1 class="text-center font-weight-bold">{{figure.name}}</h1>
+								<p class="text-center">{{figure.description}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <div class="card mt-5 mb-5">
-          <div class="card-body">
-            {% for label, messages in app.flashes %}
-            {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-              {{ message }}
-            </div>
-            {% endfor %}
-            {% endfor %}
-            <h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
-            <div class="col">
-              {{form(commentForm)}}
-            </div>
-          </div>
-        </div>
+			<div class="container mt-5 mb-5">
+				<div class="row">
+					<div class="col">
+						<div class="card">
+							<div class="card-body">
+								<h1 class="text-center font-weight-bold">Commentaires</h1>
+								{% for comment in comments.data %}
 
-        {% else %}
-        <div class="card mt-5 mb-5">
-          <div class="card-body">
-            <h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
-            <div class="col">
-              <h5> Veuillez vous <a href="{{path ('app_login')}}">connecter</a> pour pouvoir ajouter un commentaire</h5>
-            </div>
-          </div>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+									<div class="d-flex mb-3 rounded shadow">
+										<img src="../assets/img/profile/profile-9.webp" class="align-self-start mr-3 rounded-circle" alt="" style="width:64px;height:64px;" id="profilePic">
+										<div class="media-body commentContent">
+											<h5 class="mt-0 fw-bold">{{ comment.pseudo}}</h5>
+											<p>{{ comment.content}}</p>
+											<h6 style="margin-top=-6px">Publié le :
+												{{ comment.created_at|date('Y-m-d H:i')}}</h6>
+										</div>
+									</div>
 
 
+								{% endfor %}
+								{% set path = 'home_details' %}
+								{% set slug = figure.slug %}
+								{% set pages = comments.pages %}
+								{% set currentPage = comments.page %}
+								{% include "_partials/_pagination.html.twig" %}
+							</div>
 
-  <!-- Grid End -->
-</body>
+						</div>
+						{% if app.user %}
 
-{% endblock %}
-{% block footer %}
-{% include "_partials/_footer.html.twig" %}
-{% endblock %}
+							<div class="card mt-5 mb-5">
+								<div class="card-body">
+									{% include '_partials/_alerts.html.twig' %}
+									<h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
+									<div class="col">
+										{{form(commentForm)}}
+										</div>
+									</div>
+								</div>
+
+							{% else %}
+								<div class="card mt-5 mb-5">
+									<div class="card-body">
+										<h1 class="text-center font-weight-bold">Ajout de commentaire</h1>
+										<div class="col">
+											<h5>
+												Veuillez vous
+												<a href="{{path ('app_login')}}">connecter</a>
+												pour pouvoir ajouter un commentaire</h5>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+
+				<script>
+
+
+
+ const showAllImagesButton = document.querySelector('.show-all-images');
+  const hideAllImagesButton = document.querySelector('.hide-all-images');
+  const allImagesContainers = document.querySelectorAll('.d-md-block');
+  
+  showAllImagesButton.addEventListener('click', function() {
+    allImagesContainers.forEach(container => {
+      container.classList.remove('d-none');
+    });
+    showAllImagesButton.classList.add('d-none');
+    hideAllImagesButton.classList.remove('d-none');
+  });
+  
+  hideAllImagesButton.addEventListener('click', function() {
+    allImagesContainers.forEach(container => {
+      container.classList.add('d-none');
+    });
+    hideAllImagesButton.classList.add('d-none');
+    showAllImagesButton.classList.remove('d-none');
+  });
+				</script>
+
+
+				<!-- Grid End -->
+			</body>
+
+
+		{% endblock %}
+		{% block footer %}
+			{% include "_partials/_footer.html.twig" %}
+		{% endblock %}

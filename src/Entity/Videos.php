@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ImagesRepository;
+use App\Repository\VideosRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ImagesRepository::class)]
-class Images
+#[ORM\Entity(repositoryClass: VideosRepository::class)]
+class Videos
 {
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -14,9 +14,9 @@ class Images
   private ?int $id = null;
 
   #[ORM\Column(length: 255, nullable: true)]
-  private ?string $slug = null;
-
-  #[ORM\ManyToOne(inversedBy: 'image')]
+  private ?string $url = null;
+  
+  #[ORM\ManyToOne(inversedBy: 'videos')]
   private ?Figure $figure = null;
 
 
@@ -26,26 +26,14 @@ class Images
     return $this->id;
   }
 
-  public function getSlug(): ?string
+  public function getUrl(): ?string
   {
-    return $this->slug;
+    return $this->url;
   }
 
-  public function setSlug(?string $slug): self
+  public function setUrl(?string $url): self
   {
-    $this->slug = $slug;
-
-    return $this;
-  }
-
-  public function getImage(): ?Figure
-  {
-    return $this->image;
-  }
-
-  public function setImage(?Figure $image): self
-  {
-    $this->image = $image;
+    $this->url = $url;
 
     return $this;
   }
@@ -61,6 +49,5 @@ class Images
 
     return $this;
   }
-
 
 }
