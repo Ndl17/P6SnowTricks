@@ -6,7 +6,7 @@ use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -16,7 +16,7 @@ class CommentFormType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
-    ->add('content', TextType::class, [
+    ->add('content', TextareaType::class, [
       'label' => 'Ajout de commentaire',
       'attr' => ['class'=>'form-control'],
     ])
@@ -30,14 +30,14 @@ class CommentFormType extends AbstractType
       'mapped' => false,
     ])
     ->add('Envoyer', SubmitType::class ,['attr' => ['class'=>'btn btn-primary'],
-])
-    ;
-  }
+  ])
+  ;
+}
 
-  public function configureOptions(OptionsResolver $resolver): void
-  {
-    $resolver->setDefaults([
-      'data_class' => Comment::class,
-    ]);
-  }
+public function configureOptions(OptionsResolver $resolver): void
+{
+  $resolver->setDefaults([
+    'data_class' => Comment::class,
+  ]);
+}
 }

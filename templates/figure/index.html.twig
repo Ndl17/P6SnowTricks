@@ -41,46 +41,65 @@
 
   <div class="col-md-12 py-5 ml-5 mr-5">
     <!-- Grid Start -->
-
-
+    {% include '_partials/_alerts.html.twig' %}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
+
+
       {% for figure in figures %}
       <div class="col">
         <div class="card h-100" id="cards">
+          {% if figure.getImage()|length > 0 %}
+          {% set firstImage = true %}
+          {% for image in figure.getImage() %}
+          {% if firstImage and image %}
+          <img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image" />
+          {% set firstImage = false %}
+          {% endif %}
+          {% endfor %}
+          {% else %}
           <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
+          {% endif %}
           <div class="card-body">
-            <h5 class="heading mb-3">
-              <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link stretched-link" >
-                <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
-              </a>
-            </h5>
-              {% if app.user %}
+            <div class='card-heading'>
+              <h5 class="heading mb-3">
+                <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link" >
+                  <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
+                </a>
+              </h5>
+            </div>
+            {% if app.user %}
             <div>
               <div class="row g-0">
                 <div class="col-auto pe-3">
                   <i data-acorn-icon="edit" class="text-primary me-1" data-acorn-size="15"></i>
-                </div>
-                <div class="col">
+                </a>
+              </div>
+              <div class="col">
+                <a href="{{ path('home_delete', {slug:figure.slug}) }}" class="body-link">
                   <i data-acorn-icon="bin" class="text-primary me-1" data-acorn-size="15"></i>
-                </div>
+                </a>
               </div>
             </div>
-              {% endif %}
           </div>
+          {% endif %}
         </div>
-      </div>
-      {% endfor %}
-    </div>
 
-    <!-- Grid End -->
-
-    <div class="row">
-      <div class="col-12 text-center">
-        <button class="btn btn-xl btn-outline-primary sw-30">Load More</button>
       </div>
     </div>
 
+
+    {% endfor %}
   </div>
+
+  <!-- Grid End -->
+
+  <div class="row">
+    <div class="col-12 text-center">
+      <button class="btn btn-xl btn-outline-primary sw-30">Load More</button>
+    </div>
+  </div>
+
+</div>
 
 </body>
 {% endblock %}

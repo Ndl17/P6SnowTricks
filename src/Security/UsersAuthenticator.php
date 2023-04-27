@@ -59,13 +59,5 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
     return $this->urlGenerator->generate(self::LOGIN_ROUTE);
   }
 
-  public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
-  {
-    $request->getSession()->getFlashBag()->add('error', 'Invalid credentials.');
-
-    // Redirect back to the login page
-    $loginUrl = $this->getLoginUrl($request);
-    return new RedirectResponse($loginUrl);
-  }
 
 }

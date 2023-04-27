@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<style>
+
+
+</style>
+{% include "_partials/_nav.html.twig" %}
+<body>
+
+  <div class="container">
+    <div class="row" style="margin-top: 100px !important;">
+      <div class="col-md-12">
+        <h1>Formulaire de création d'une figure </h1>
+        {% include '_partials/_alerts.html.twig' %}
+        {{form(figureForm)}}
+      </div>
+
+
+
+    </body>
+
+    {% endblock %}
+    {% block footer %}
+    {% include "_partials/_footer.html.twig" %}
+    {% endblock %}

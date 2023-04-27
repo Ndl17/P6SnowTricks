@@ -19,20 +19,11 @@ class Figure
   #[ORM\Column]
   private ?int $id = null;
 
-  #[ORM\Column(length: 150)]
+  #[ORM\Column(length: 150, unique: true)]
   private ?string $name = null;
 
   #[ORM\Column(length: 255)]
   private ?string $description = null;
-
-  #[ORM\Column(length: 255)]
-  private ?string $type = null;
-
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $imgName = null;
-
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $vidName = null;
 
   #[ORM\Column]
   private ?\DateTimeImmutable $created_at = null;
@@ -47,9 +38,21 @@ class Figure
   #[ORM\JoinColumn(nullable: false)]
   private ?User $userId = null;
 
+
+  #[ORM\ManyToOne(inversedBy: 'figures')]
+  private ?Groupe $groupe = null;
+
+  #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+  private Collection $image;
+
+  #[ORM\OneToMany(targetEntity: Videos::class, mappedBy: "figure", cascade: ['persist', 'remove'])]
+  private Collection $videos;
+
   public function __construct()
   {
-      $this->comments = new ArrayCollection();
+    $this->comments = new ArrayCollection();
+    $this->image = new ArrayCollection();
+    $this->videos = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -81,105 +84,143 @@ class Figure
     return $this;
   }
 
-  public function getType(): ?string
-  {
-    return $this->type;
-  }
-
-  public function setType(string $type): self
-  {
-    $this->type = $type;
-
-    return $this;
-  }
-
-  public function getImgName(): ?string
-  {
-    return $this->imgName;
-  }
-
-  public function setImgName(?string $imgName): self
-  {
-    $this->imgName = $imgName;
-
-    return $this;
-  }
-
-  public function getVidName(): ?string
-  {
-    return $this->vidName;
-  }
-
-  public function setVidName(?string $vidName): self
-  {
-    $this->vidName = $vidName;
-
-    return $this;
-  }
-
   public function getCreatedAt(): ?\DateTimeImmutable
   {
-      return $this->created_at;
+    return $this->created_at;
   }
 
   public function setCreatedAt(\DateTimeImmutable $created_at): self
   {
-      $this->created_at = $created_at;
+    $this->created_at = $created_at;
 
-      return $this;
+    return $this;
   }
 
   public function getModifiedAt(): ?\DateTimeImmutable
   {
-      return $this->modified_at;
+    return $this->modified_at;
   }
 
   public function setModifiedAt(\DateTimeImmutable $modified_at): self
   {
-      $this->modified_at = $modified_at;
+    $this->modified_at = $modified_at;
 
-      return $this;
+    return $this;
   }
 
   /**
-   * @return Collection<int, Comment>
-   */
+  * @return Collection<int, Comment>
+  */
   public function getComments(): Collection
   {
-      return $this->comments;
+    return $this->comments;
   }
 
   public function addComment(Comment $comment): self
   {
-      if (!$this->comments->contains($comment)) {
-          $this->comments->add($comment);
-          $comment->setIdFigure($this);
-      }
+    if (!$this->comments->contains($comment)) {
+      $this->comments->add($comment);
+      $comment->setIdFigure($this);
+    }
 
-      return $this;
+    return $this;
   }
 
   public function removeComment(Comment $comment): self
   {
-      if ($this->comments->removeElement($comment)) {
-          // set the owning side to null (unless already changed)
-          if ($comment->getIdFigure() === $this) {
-              $comment->setIdFigure(null);
-          }
+    if ($this->comments->removeElement($comment)) {
+      // set the owning side to null (unless already changed)
+      if ($comment->getIdFigure() === $this) {
+        $comment->setIdFigure(null);
       }
+    }
 
-      return $this;
+    return $this;
   }
 
   public function getUserId(): ?User
   {
-      return $this->userId;
+    return $this->userId;
   }
 
   public function setUserId(?User $userId): self
   {
-      $this->userId = $userId;
+    $this->userId = $userId;
 
-      return $this;
+    return $this;
+  }
+
+
+
+  public function getGroupe(): ?groupe
+  {
+    return $this->groupe;
+  }
+
+  public function setGroupe(?groupe $groupe): self
+  {
+    $this->groupe = $groupe;
+
+    return $this;
+  }
+
+  /**
+  * @return Collection<int, images>
+  */
+  public function getImage(): Collection
+  {
+    return $this->image;
+  }
+
+  public function addImage(images $image): self
+  {
+    if (!$this->image->contains($image)) {
+      $this->image->add($image);
+      $image->setFigure($this);
+    }
+
+    return $this;
+  }
+
+  public function removeImage(images $image): self
+  {
+    if ($this->image->removeElement($image)) {
+      // set the owning side to null (unless already changed)
+      if ($image->getFigure() === $this) {
+        $image->setFigure(null);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+  * @return Collection<int, Videos>
+  */
+  public function getVideos(): Collection
+  {
+    return $this->videos;
+  }
+
+  public function addVideo(Videos $video): self
+  {
+    if (!$this->videos->contains($video)) {
+      $this->videos->add($video);
+      $video->setFigure($this);
+    }
+
+    return $this;
+  }
+
+  public function removeVideo(Videos $video): self
+  {
+    if ($this->videos->removeElement($video)) {
+      // set the owning side to null (unless already changed)
+      if ($video->getFigure() === $this) {
+        $video->setFigure(null);
+      }
+    }
+
+    return $this;
   }
 }
