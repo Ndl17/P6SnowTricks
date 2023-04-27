@@ -10,6 +10,7 @@ use App\Repository\FigureRepository;
 use App\Form\CommentFormType;
 use App\Form\FigureFormType;
 use App\Repository\CommentRepository;
+use App\Service\ImageCreationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -17,25 +18,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-//use App\Security\Voter\FigureVoter;
-use DateTime;
-use DateTimeImmutable;
-use DateTimeZone;
+use App\Service\DateTimeProviderService;
+
 
 #[Route('/home', name: 'home_')]
 /**
-* Summary of FigureController
-*/
+ * Summary of FigureController
+ */
 class FigureController extends AbstractController
 {
 
 
   #[Route('/', name: 'index')]
   /**
-  * Summary of index
-  * @param FigureRepository $figureRepository
-  * @return Response
-  */
+   * Summary of index
+   * @param FigureRepository $figureRepository
+   * @return Response
+   */
   public function index(FigureRepository $figureRepository): Response
   {
     //recupere toutes les figures
@@ -67,13 +66,13 @@ class FigureController extends AbstractController
 
   #[Route('/ajout', name: 'add')]
   /**
-  * Summary of addFig
-  * @param Request $request
-  * @param EntityManagerInterface $entityManager
-  * @param SluggerInterface $slugger
-  * @return Response
-  */
-  public function addFig(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, FigureRepository $figureRepository): Response
+   * Summary of addFig
+   * @param Request $request
+   * @param EntityManagerInterface $entityManager
+   * @param SluggerInterface $slugger
+   * @return Response
+   */
+  public function addFig(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, FigureRepository $figureRepository, DateTimeProviderService $dateTimeProviderService,ImageCreationService $imageService ): Response
   {
     // on verifie que l'utilisateur est connecté
     $this->denyAccessUnlessGranted('ROLE_USER');
@@ -83,8 +82,7 @@ class FigureController extends AbstractController
 
     $vids = new Videos;
 
-    $Images = new Images;
-    
+
     //on  récupère le formulaire
     $form = $this->createForm(FigureFormType::class, $figure);
     $form->handleRequest($request);
@@ -111,8 +109,12 @@ class FigureController extends AbstractController
 
 
       $imageFiles = $form->get('imagesFiles')->getData();
+
+      //on fait appel au service pour ajouter les images
+      $imageService->addImage($imageFiles,$figure,$slugger);
+
       //on boucle sur les images
-      foreach ($imageFiles as $imageFile) {
+     /* foreach ($imageFiles as $imageFile) {
         // si il y a une image on la traite
         if ($imageFile) {
           // on recupere le nom de l'image
@@ -138,12 +140,11 @@ class FigureController extends AbstractController
           $images->setSlug($newFilename);
           $figure->addImage($images);
         }
-      }
+      }*/
       //on récupère la date du jour pour setter date créa & modif
-      $now = new DateTime();
-      $createdAt = DateTimeImmutable::createFromMutable($now)->setTimezone(new DateTimeZone('UTC'));
-      $figure->setCreatedAt($createdAt);
-      $figure->setModifiedAt($createdAt);
+      $now = $dateTimeProviderService->getCurrentDateTime();
+      $figure->setCreatedAt($now);
+      $figure->setModifiedAt($now);
       //on set le slug
       $slug = strtolower(str_replace(' ', '-', $figure->getName()));
       $figure->setSlug($slug);
@@ -166,14 +167,14 @@ class FigureController extends AbstractController
 
   #[Route('/{slug}', name: 'details')]
   /**
-  * Summary of detail
-  * @param Figure $figure
-  * @param CommentRepository $commentRepository
-  * @param Request $request
-  * @param EntityManagerInterface $entityManager
-  * @return Response
-  */
-  public function detail(Figure $figure, CommentRepository $commentRepository, Request $request, EntityManagerInterface $entityManager): Response
+   * Summary of detail
+   * @param Figure $figure
+   * @param CommentRepository $commentRepository
+   * @param Request $request
+   * @param EntityManagerInterface $entityManager
+   * @return Response
+   */
+  public function detail(Figure $figure, CommentRepository $commentRepository, Request $request, EntityManagerInterface $entityManager, DateTimeProviderService $dateTimeProviderService): Response
   {
     // on recupere les commentaires de la figure
     // on les pagine
@@ -194,10 +195,10 @@ class FigureController extends AbstractController
       // on recupere l'utilisateur
       $user = $this->getUser();
       // on recupere la date du jour pour setter date créa
-      $now = new DateTime();
-      $createdAt = DateTimeImmutable::createFromMutable($now)->setTimezone(new DateTimeZone('UTC'));
-      // on set la date de création
-      $comment->setCreatedAt($createdAt);
+
+      $now = $dateTimeProviderService->getCurrentDateTime();
+      $comment->setCreatedAt($now);
+
       // on set dans comment l'id de l'utilisateur
       $comment->setIdPseudo($user);
       // on set dans comment l'id de la figure
@@ -219,19 +220,30 @@ class FigureController extends AbstractController
 
   #[Route('/{slug}/supprimer', name: 'delete')]
   /**
-  * Summary of deleteFig
-  * @param Figure $figure
-  * @param EntityManagerInterface $entityManager
-  * @return Response
-  */
+   * Summary of deleteFig
+   * @param Figure $figure
+   * @param EntityManagerInterface $entityManager
+   * @return Response
+   */
   public function deleteFig(Figure $figure, EntityManagerInterface $entityManager): Response
   {
     // on verifie que l'utilisateur est connecté
     $this->denyAccessUnlessGranted('ROLE_USER');
     // on supprime la figure
+
+    // supprimer toutes les images associées à la figure qui sont upload
+    foreach ($figure->getImage() as $image) {
+      $imagePath = $this->getParameter('images_directory') . '/' . $image->getSlug();
+      if (file_exists($imagePath)) {
+        unlink($imagePath);
+      }
+    }
+
     $entityManager->remove($figure);
     $entityManager->flush();
     $this->addFlash('success', 'La figure a bien été supprimée !');
     return $this->redirectToRoute('home_index');
   }
+
+
 }
