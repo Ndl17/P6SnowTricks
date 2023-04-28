@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
-use App\Entity\Comment;
 use App\Entity\Images;
+use App\Entity\Comment;
 use App\Entity\Videos;
 use App\Repository\FigureRepository;
 use App\Form\CommentFormType;
 use App\Form\FigureFormType;
+use App\Form\EditFigureFormType;
 use App\Repository\CommentRepository;
 use App\Service\ImageCreationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -72,7 +73,7 @@ class FigureController extends AbstractController
    * @param SluggerInterface $slugger
    * @return Response
    */
-  public function addFig(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, FigureRepository $figureRepository, DateTimeProviderService $dateTimeProviderService,ImageCreationService $imageService ): Response
+  public function addFig(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, FigureRepository $figureRepository, DateTimeProviderService $dateTimeProviderService, ImageCreationService $imageService): Response
   {
     // on verifie que l'utilisateur est connecté
     $this->denyAccessUnlessGranted('ROLE_USER');
@@ -111,10 +112,10 @@ class FigureController extends AbstractController
       $imageFiles = $form->get('imagesFiles')->getData();
 
       //on fait appel au service pour ajouter les images
-      $imageService->addImage($imageFiles,$figure,$slugger);
+      $imageService->addImage($imageFiles, $figure, $slugger);
 
       //on boucle sur les images
-     /* foreach ($imageFiles as $imageFile) {
+      /* foreach ($imageFiles as $imageFile) {
         // si il y a une image on la traite
         if ($imageFile) {
           // on recupere le nom de l'image
@@ -246,4 +247,86 @@ class FigureController extends AbstractController
   }
 
 
+
+  /**
+   * Summary of editFig
+   * @param Figure $figure
+   * @param Request $request
+   * @return Response
+   */
+  #[Route('/{slug}/edit', name: 'edit')]
+  public function editFig($slug, Request $request, FigureRepository $figureRepository, EntityManagerInterface $entityManager, DateTimeProviderService $dateTimeProviderService,SluggerInterface $slugger,ImageCreationService $imageService): Response
+  {
+    // Récupération de la figure à éditer depuis la base de données
+    $figure = $figureRepository->findOneBy(['slug' => $slug]);
+    $images = $figure->getImage();
+    // Vérification si la figure existe
+    if (!$figure) {
+      throw $this->createNotFoundException('Figure non trouvée');
+    }
+
+    // Création du formulaire d'édition
+    $form = $this->createForm(EditFigureFormType::class, $figure);
+
+    $form->handleRequest($request);
+
+    // Vérification si le formulaire a été soumis et est valide
+    if ($form->isSubmitted() && $form->isValid()) {
+
+      $existingFigure = $figureRepository->findOneBy(['name' => $figure->getName(), 'id' => $figure->getId()], ['id' => 'DESC']);
+
+      //si une figure avec le même nom existe et que ce n'est pas la figure en cours d'édition, on affiche un message d'erreur
+      if ($existingFigure !== null && $existingFigure->getId() !== $figure->getId()) {
+        $this->addFlash('error', 'Une figure du même nom existe déjà.');
+        return $this->redirectToRoute('home_index');
+      }
+      // Récupération de l'entité gérant l'upload des images
+         $imageFiles = $form->get('imagesFiles')->getData();
+
+      //on fait appel au service pour ajouter les images
+      $imageService->addImage($imageFiles, $figure, $slugger);
+
+
+      $now = $dateTimeProviderService->getCurrentDateTime();
+      $figure->setModifiedAt($now);
+      $figure->setSlug(strtolower(str_replace(' ', '-', $figure->getName())));
+      $deleteImagesIds = $request->get('deleteImages');
+      $deleteVideosIds = $request->get('deleteVideos');
+
+
+
+      // Suppression des images cochées
+      if (!empty($deleteImagesIds)) {
+        foreach ($deleteImagesIds as $deleteImageId) {
+          $image = $entityManager->getRepository(Images::class)->find($deleteImageId);
+          if ($image) {
+            $entityManager->remove($image);
+          }
+        }
+      }
+
+      // Suppression des videos cochées
+      if (!empty($deleteVideosIds)) {
+        foreach ($deleteVideosIds as $deleteVideosId) {
+          $video = $entityManager->getRepository(Videos::class)->find($deleteVideosId);
+          if ($video) {
+            $entityManager->remove($video);
+          }
+        }
+      }
+      $entityManager->persist($figure);
+      $entityManager->flush();
+
+      $this->addFlash('success', 'Figure éditée avec succès');
+
+      return $this->redirectToRoute('home_index');
+    }
+
+    // Affichage du formulaire d'édition
+    return $this->render('figure/editFigure.html.twig', [
+      'figure' => $figure,
+      'images' => $images,
+      'editForm' => $form->createView(),
+    ]);
+  }
 }

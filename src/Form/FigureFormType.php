@@ -65,7 +65,7 @@ class FigureFormType extends AbstractType
 
 
 
-    ->add('videos', UrlType::class, [
+    ->add('videos', ::class, [
       'label' => 'Vidéo',
       'required' => false,
       'mapped' => false,

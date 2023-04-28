@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!
+{% endblock %}
+
+{% block body %}
+	<style></style>
+	{% include "_partials/_nav.html.twig" %}
+	<body>
+
+		<div class="container">
+			<div class="row" style="margin-top: 100px !important;">
+				<div class="col-md-12">
+					<h1>Formulaire de modification d'une figure
+					</h1>
+					{% include '_partials/_alerts.html.twig' %}
+
+					{{ form_start(editForm) }}
+					{{ form_errors(editForm) }}
+
+					{{ form_row(editForm.name) }}
+					{{ form_row(editForm.description) }}
+					{{ form_row(editForm.groupe) }}
+					{{ form_row(editForm.imagesFiles) }}
+
+					<p>Delete Images</p>
+					<ul>
+						{% for image in figure.getImage() %}
+							<div class="form-group form-check">
+								<input type="checkbox" class="form-check-input" name="deleteImages[]" value="{{ image.id }}" id="deleteImages_{{ image.id }}">
+								<label class="form-check-label">
+									<img src="{{ asset('uploads/images/'~ image.slug) }}" height="100" width="100">
+								</label>
+							</div>
+						{% endfor %}
+					</ul>
+
+
+          		<p>Delete Vids</p>
+					<ul>
+						{% for video in figure.getVideos() %}
+							<div class="form-group form-check">
+                <label class="form-check-label">
+                <iframe src="{{video.url}}" frameborder="0"></iframe>
+    
+								<input type="checkbox" class="form-check-input" name="deleteVideos[]" value="{{ video.id }}" id="deleteImages_{{ video.id }}">
+							</div>
+						{% endfor %}
+					</ul>
+
+
+					{{ form_end(editForm) }}
+				</div>
+			</body>
+
+		{% endblock %}
+
+		{% block footer %}
+			{% include "_partials/_footer.html.twig" %}
+		{% endblock %}
