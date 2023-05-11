@@ -62,7 +62,18 @@ class EditFigureFormType extends AbstractType
                 ]
             ])
 
-
+    ->add('videos', CollectionType::class, [
+      'entry_type' => UrlType::class,
+      'label' => 'Vidéos',
+      'required' => false,
+      'mapped' => false,
+      'allow_add' => true,
+      'allow_delete' => true,
+      'attr' => ['class' => 'form-control'],
+      'entry_options' => [
+        'attr' => ['class' => 'form-control'],
+      ],
+    ])
 
             ->add('Envoyer', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],

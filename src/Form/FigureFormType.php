@@ -4,11 +4,11 @@ namespace App\Form;
 
 use App\Entity\Figure;
 use App\Entity\Groupe;
+use App\Entity\Videos;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -64,13 +64,26 @@ class FigureFormType extends AbstractType
     ])
 
 
+    ->add('videos', CollectionType::class, [
+      'entry_type' => UrlType::class,
+      'label' => 'Vidéos',
+      'required' => false,
+      'mapped' => false,
+      'allow_add' => true,
+      'allow_delete' => true,
+      'attr' => ['class' => 'form-control'],
+      'entry_options' => [
+        'attr' => ['class' => 'form-control'],
+      ],
+    ])
 
+/*
     ->add('videos', ::class, [
       'label' => 'Vidéo',
       'required' => false,
       'mapped' => false,
       'attr' => ['class' => 'form-control'],
-    ])
+    ])*/
 
 
     ->add('Envoyer', SubmitType::class, [

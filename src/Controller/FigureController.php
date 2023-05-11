@@ -81,7 +81,6 @@ class FigureController extends AbstractController
     // on instancie les entités
     $figure = new Figure;
 
-    $vids = new Videos;
 
 
     //on  récupère le formulaire
@@ -105,9 +104,12 @@ class FigureController extends AbstractController
 
       $videos = $form->get('videos')->getData();
       //on set les videos de la figure
-      $vids->setUrl($videos);
-      $figure->addVideo($vids);
 
+      foreach ($videos as $video) {
+        $vids = new Videos;
+        $vids->setUrl($video);
+        $figure->addVideo($vids);
+      }
 
       $imageFiles = $form->get('imagesFiles')->getData();
 
@@ -286,14 +288,24 @@ class FigureController extends AbstractController
       //on fait appel au service pour ajouter les images
       $imageService->addImage($imageFiles, $figure, $slugger);
 
+      $videos = $form->get('videos')->getData();
+      foreach ($videos as $video) {
+        $vids = new Videos;
+        $vids->setUrl($video);
+        $figure->addVideo($vids);
+      }
+      //on set les videos de la figure
+
+
 
       $now = $dateTimeProviderService->getCurrentDateTime();
       $figure->setModifiedAt($now);
       $figure->setSlug(strtolower(str_replace(' ', '-', $figure->getName())));
+
+
+
       $deleteImagesIds = $request->get('deleteImages');
       $deleteVideosIds = $request->get('deleteVideos');
-
-
 
       // Suppression des images cochées
       if (!empty($deleteImagesIds)) {
@@ -301,6 +313,7 @@ class FigureController extends AbstractController
           $image = $entityManager->getRepository(Images::class)->find($deleteImageId);
           if ($image) {
             $entityManager->remove($image);
+              $entityManager->flush();
           }
         }
       }
@@ -311,6 +324,7 @@ class FigureController extends AbstractController
           $video = $entityManager->getRepository(Videos::class)->find($deleteVideosId);
           if ($video) {
             $entityManager->remove($video);
+              $entityManager->flush();
           }
         }
       }
