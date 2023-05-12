@@ -110,7 +110,7 @@
 
 							{% if app.user %}
 								<div class="iconEdit">
-									<a href="#">
+									<a href="{{ path('home_edit', {slug:figure.slug}) }}">
 										<i data-acorn-icon="edit" class="text-primary  edit-icon" data-acorn-size="30"></i>
 									</a>
 								</div>
@@ -135,11 +135,11 @@
 								</div>
 							</div>
 							<div class="col">
-								<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le
+								<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Crée le
 								</div>
 							</div>
 							<div class="col-auto ps-3">
-								<div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+								<div class="display-5 text-white">{{ figure.CreatedAt|date('Y-m-d') }}</div>
 							</div>
 						</div>
 					</div>
@@ -196,7 +196,7 @@
 			<div class="container">
 				<div class="row mt-5 mb-5">
 					{% for image in figure.getImage() %}
-						<div class="col-3 img_responsive d-none d-md-block">
+						<div class="col-3 img_responsive d-none d-md-block mb-3">
 							<div>
 								<div class="card">
 									<button type="button" class="btn btn-primary btnfilm">

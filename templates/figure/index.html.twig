@@ -71,8 +71,9 @@
             <div>
               <div class="row g-0">
                 <div class="col-auto pe-3">
+                <a href="{{ path('home_edit', {slug:figure.slug}) }}" class="body-link">
                   <i data-acorn-icon="edit" class="text-primary me-1" data-acorn-size="15"></i>
-                </a>
+                 </a>
               </div>
               <div class="col">
                 <a href="{{ path('home_delete', {slug:figure.slug}) }}" class="body-link">

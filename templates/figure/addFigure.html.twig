@@ -4,8 +4,7 @@
 
 {% block body %}
 <style>
-
-
+  /* Ajoutez vos styles personnalisés ici */
 </style>
 {% include "_partials/_nav.html.twig" %}
 <body>
@@ -13,16 +12,47 @@
   <div class="container">
     <div class="row" style="margin-top: 100px !important;">
       <div class="col-md-12">
-        <h1>Formulaire de création d'une figure </h1>
+        <h1>Formulaire de création d'une figure</h1>
         {% include '_partials/_alerts.html.twig' %}
-        {{form(figureForm)}}
+        {{ form_start(figureForm) }}
+        {{ form_row(figureForm.name) }}
+        {{ form_row(figureForm.description) }}
+        {{ form_row(figureForm.imagesFiles) }}
+        {{ form_row(figureForm.groupe) }}
+        <label>Vidéos</label>
+        <div class="form-control" data-prototype="{{ form_widget(figureForm.videos.vars.prototype)|e('html_attr') }}">
+          {% for video in figureForm.videos %}
+            <div class="video-input">
+              {{ form_row(video) }}
+              <button type="button" class="btn btn-danger remove-video">Supprimer</button>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="btn btn-secondary" id="add-video">Ajouter une vidéo</button>
+        {{ form_row(figureForm.Envoyer) }}
+        {{ form_widget(figureForm._token) }}
+        {{ form_end(figureForm, {'render_rest': false}) }} {# Utilisez render_rest: false pour empêcher l'affichage automatique des champs restants #}
       </div>
+    </div>
+  </div>
 
+  <script>
+    document.getElementById('add-video').addEventListener('click', function () {
+      let collectionHolder = document.querySelector('[data-prototype]');
+      let prototype = collectionHolder.dataset.prototype;
+      let newForm = prototype.replace(/__name__/g, collectionHolder.children.length);
+      collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video">Supprimer</button></div>');
+    });
 
+    document.addEventListener('click', function (event) {
+      if (event.target.classList.contains('remove-video')) {
+        event.target.parentElement.remove();
+      }
+    });
+  </script>
+</body>
 
-    </body>
-
-    {% endblock %}
-    {% block footer %}
-    {% include "_partials/_footer.html.twig" %}
-    {% endblock %}
+{% endblock %}
+{% block footer %}
+{% include "_partials/_footer.html.twig" %}
+{% endblock %}

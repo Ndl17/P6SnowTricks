@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!
+{% endblock %}
+
+{% block body %}
+	{% include "_partials/_nav.html.twig" %}
+	<body>
+		<style>
+			.custom-margin {
+				margin-right: 10px;
+			}
+		</style>
+
+		<div class="container">
+			<div class="row" style="margin-top: 100px !important;">
+				<div class="col-md-12">
+					<h1>Formulaire de modification d'une figure
+					</h1>
+					{% include '_partials/_alerts.html.twig' %}
+					{{ form_start(editForm) }}
+					{{ form_errors(editForm) }}
+					{{ form_row(editForm.name) }}
+					{{ form_row(editForm.description) }}
+					{{ form_row(editForm.groupe) }}
+					{{ form_row(editForm.imagesFiles) }}
+					<label>Vidéos</label>
+					<div class="form-control" data-prototype="{{ form_widget(editForm.videos.vars.prototype)|e('html_attr') }}">
+						{% for video in editForm.videos %}
+							<div class="video-input">
+								{{ form_row(video) }}
+								<button type="button" class="btn btn-danger remove-video mt-2">Supprimer</button>
+							</div>
+						{% endfor %}
+					</div>
+					<button type="button" class="btn btn-secondary mt-2" id="add-video">Ajouter une vidéo</button>
+
+
+					<p>Supprimer des Images:
+					</p>
+					<ul>
+						{% for image in figure.getImage() %}
+							<div class="form-group form-check">
+								<input type="checkbox" class="form-check-input" name="deleteImages[]" value="{{ image.id }}" id="deleteImages_{{ image.id }}">
+								<label class="form-check-label">
+									<img src="{{ asset('uploads/images/'~ image.slug) }}" height="100" width="100">
+								</label>
+							</div>
+						{% endfor %}
+					</ul>
+
+
+					<p>Supprimer des Vidéos:
+					</p>
+					<ul>
+						{% for video in figure.getVideos() %}
+							<div class="form-group form-check">
+								<label class="form-check-label">
+									<iframe src="{{video.url}}" frameborder="0"></iframe>
+
+									<input type="checkbox" class="form-check-input" name="deleteVideos[]" value="{{ video.id }}" id="deleteImages_{{ video.id }}">
+								</div>
+							{% endfor %}
+						</ul>
+
+						<div class="d-flex justify-content-start">
+							{{ form_row(editForm.Envoyer, {'attr': {'class': 'btn btn-success custom-margin'}}) }}
+							<a href="{{ path('home') }}"><button type="button" class="btn btn-info custom-margin">Retour</button></a>
+							<a href="{{ path('home_delete', {slug:figure.slug}) }}"><button type="button" class="btn btn-danger" style="margin-right: 5px;">Supprimer</button></a>
+
+						</div>
+
+
+						{{ form_widget(editForm._token) }}
+						{{ form_end(editForm, {'render_rest': false}) }}
+
+					</div>
+				</body>
+				<script>
+					document.getElementById('add-video').addEventListener('click', function () {
+						let collectionHolder = document.querySelector('[data-prototype]');
+						let prototype = collectionHolder.dataset.prototype;
+						let newForm = prototype.replace(/__name__/g, collectionHolder.children.length);
+						collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video">Supprimer</button></div>');
+						});
+
+						document.addEventListener('click', function (event) {
+						if (event.target.classList.contains('remove-video')) {
+						event.target.parentElement.remove();
+						}
+					});
+				</script>
+
+			{% endblock %}
+
+			{% block footer %}
+				{% include "_partials/_footer.html.twig" %}
+			{% endblock %}

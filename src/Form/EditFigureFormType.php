@@ -4,20 +4,22 @@ namespace App\Form;
 
 use App\Entity\Figure;
 use App\Entity\Groupe;
+use App\Entity\Videos;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class FigureFormType extends AbstractType
+class EditFigureFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -25,12 +27,17 @@ class FigureFormType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom de la figure',
                 'attr' => ['class' => 'form-control'],
-                'required' => true,
+                'required' => false,
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Décrivez votre figure',
                 'attr' => ['class' => 'form-control'],
-                'required' => true,
+                'required' => false,
+            ])
+            ->add('groupe', EntityType::class, [
+                'class' => Groupe::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-control'],
             ])
 
             ->add('imagesFiles', FileType::class, [
@@ -48,32 +55,25 @@ class FigureFormType extends AbstractType
                                 'mimeTypes' => [
                                     'image/jpeg',
                                     'image/png',
-                                ],
+                                ]
                             ]),
                         ],
                     ]),
-                ],
+                ]
             ])
 
-            ->add('groupe', EntityType::class, [
-                'class' => Groupe::class,
-                'choice_label' => 'name',
-                'label' => 'Groupe de figure',
-                'attr' => ['class' => 'form-control'],
-            ])
-
-            ->add('videos', CollectionType::class, [
-                'entry_type' => UrlType::class,
-                'label' => 'Vidéos',
-                'required' => false,
-                'mapped' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'attr' => ['class' => 'form-control'],
-                'entry_options' => [
-                    'attr' => ['class' => 'form-control'],
-                ],
-            ])
+    ->add('videos', CollectionType::class, [
+      'entry_type' => UrlType::class,
+      'label' => 'Vidéos',
+      'required' => false,
+      'mapped' => false,
+      'allow_add' => true,
+      'allow_delete' => true,
+      'attr' => ['class' => 'form-control'],
+      'entry_options' => [
+        'attr' => ['class' => 'form-control'],
+      ],
+    ])
 
             ->add('Envoyer', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
