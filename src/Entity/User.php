@@ -42,6 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Figure::class, orphanRemoval: true)]
     private Collection $figures;
 
+    #[ORM\Column(length: 255)]
+    private ?string $resetToken = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -186,6 +189,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $figure->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }
