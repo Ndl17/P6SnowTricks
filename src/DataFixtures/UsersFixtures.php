@@ -22,6 +22,7 @@ class UsersFixtures extends Fixture
       $user->setRoles(["ROLE_USER"]);
       $user->setPassword(password_hash($faker->password(15), PASSWORD_BCRYPT));
       $user->setPseudo($faker->unique()->firstName(20));
+      $user->setIsVerified(true);
       $user->setResetToken($faker->uuid);
       $manager->persist($user);
         $this->setReference('user_' . $i, $user);
