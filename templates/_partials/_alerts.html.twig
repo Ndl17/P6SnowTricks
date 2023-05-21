@@ -14,3 +14,13 @@
   {% endfor %}
 </div>
 {% endif %}
+
+
+{% if app.user and app.user.getisverified() == false %}
+<div class="alert alert-danger">
+  <p>Vous devez valider votre compte pour pouvoir accéder à toutes les fonctionnalités du site.</p>
+  <p>Si vous ne l'avez pas reçu, <a href="{{path('app_resend')}}">cliquez ici</a> pour le recevoir à nouveau.</p>
+</div>
+{% endif %}
+
+

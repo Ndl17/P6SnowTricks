@@ -1,0 +1,3 @@
+<p>Bonjour {{user.pseudo}}  <p>
+<p>Merci de votre inscription, afin de finaliser cette dernière cliquez sur le lien ci-dessous:</p>
+<p><a href="{{ absolute_url(path('app_verify', {token: token}))}}">Confirmer mon compte</a></p>
