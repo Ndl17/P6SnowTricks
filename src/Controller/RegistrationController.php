@@ -19,6 +19,17 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name:'app_register')]
+    /**
+     * Summary of register
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $userPasswordHasher
+     * @param \Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface $userAuthenticator
+     * @param \App\Security\UsersAuthenticator $authenticator
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \App\Service\SendMailService $mail
+     * @param \App\Service\JWTService $jwt
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator, EntityManagerInterface $entityManager, SendMailService $mail, JWTService $jwt): Response
     {
         $user = new User();
@@ -38,7 +49,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-//on génére le jwt de l'utilisateur
+            //on génére le jwt de l'utilisateur
             $header = [
                 'typ' => 'JWT',
                 'alg' => 'HS256',
@@ -47,10 +58,10 @@ class RegistrationController extends AbstractController
             $payload = [
                 'user_id' => $user->getId(),
             ];
-// on génere le token
+            // on génere le token
 
             $token = $jwt->generate($header, $payload, $_ENV['JWT_SECRET']);
-// on envoie le mail de confirmation
+            // on envoie le mail de confirmation
 
             $mail->send('noreply@snowtricks.com',
                 $user->getEmail(),
@@ -68,6 +79,14 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/{token}', name:'app_verify')]
+    /**
+     * Summary of verify
+     * @param \App\Repository\UserRepository $userRepository
+     * @param mixed $token
+     * @param \App\Service\JWTService $jwt
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function verify(UserRepository $userRepository, string $token, JWTService $jwt, EntityManagerInterface $entityManager): Response
     {
 
@@ -95,6 +114,13 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/resend', name:'app_resend')]
+    /**
+     * Summary of resend
+     * @param \App\Repository\UserRepository $userRepository
+     * @param \App\Service\JWTService $jwt
+     * @param \App\Service\SendMailService $mail
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function resend(UserRepository $userRepository, JWTService $jwt, SendMailService $mail): Response
     {
 

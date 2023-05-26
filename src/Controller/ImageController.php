@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Images;
-use App\Form\EditFigureImageFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +14,12 @@ class ImageController extends AbstractController
   
     
     #[Route('/image/delete/{id}', name:'image_delete')]
+    /**
+     * Summary of deleteImage
+     * @param \App\Entity\Images $image
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteImage(Images $image, EntityManagerInterface $entityManager): Response
     {
         // on verifie que l'utilisateur est connecté

@@ -9,37 +9,34 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImageCreationService
 {
+    private $params;
+    private $slugger;
 
-  private $params;
-
-  public function __construct(ParameterBagInterface $params)
-  {
-    $this->params = $params;
-  }
-
-  public function addImage(array $images,Figure $figure,SluggerInterface $slugger) {
-    foreach ($images as $image) {
-      if ($image) {
-        $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-        // on la slugifie
-        $safeFilename = $slugger->slug($originalFilename);
-        // on genere un nom unique
-        $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
-
-        // on deplace l'image dans le dossier images
-    
-          $image->move(
-            $this->params->get('images_directory'),
-            $newFilename
-          );
-     
-        $img = new Images();
-        $img->setSlug($newFilename);
-        $figure->addImage($img);
-      }
+    public function __construct(ParameterBagInterface $params, SluggerInterface $slugger)
+    {
+        $this->params = $params;
+        $this->slugger = $slugger;
     }
-  }
 
+    public function addImage(array $images,Figure $figure) {
+        foreach ($images as $image) {
+          if ($image) {
+            $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            // on la slugifie
+            $safeFilename = $this->slugger->slug($originalFilename);
+            // on genere un nom unique
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
 
-  //pas fini
+            // on deplace l'image dans le dossier images
+            $image->move(
+                $this->params->get('images_directory'),
+                $newFilename
+            );
+
+            $img = new Images();
+            $img->setSlug($newFilename);
+            $figure->addImage($img);
+          }
+        }
+    }
 }

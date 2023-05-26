@@ -13,6 +13,12 @@ class VideosController extends AbstractController
   
     
     #[Route('/videos/delete/{id}', name:'videos_delete')]
+    /**
+     * Summary of deleteVideos
+     * @param \App\Entity\Videos $videos
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteVideos(Videos $videos, EntityManagerInterface $entityManager): Response
     {
         // on verifie que l'utilisateur est connecté

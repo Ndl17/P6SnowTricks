@@ -61,9 +61,9 @@ class EditFigureFormType extends AbstractType
                 'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mt-2'],
                 'entry_options' => [
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => ['class' => 'form-control mt-2'],
                 ],
             ])
 

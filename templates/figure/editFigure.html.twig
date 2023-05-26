@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!
+{% block title %}Modification d'une figure
 {% endblock %}
 
 {% block body %}
@@ -96,15 +96,18 @@
 			}
 		</style>
 
-		<div class="container">
-			<div class="row" style="margin-top: 100px !important;">
+
+
+					<div class="container">
+					<div class="row" style="margin-top: 100px !important;">
 				<div class="col-md-12">
-					<h1>Formulaire de modification d'une figure
+					<h1 class="text-center">Formulaire de modification d'une figure
 					</h1>
+					</div>	
+					</div>	
+					</div>				
 					{% include '_partials/_alerts.html.twig' %}
 
-
-					{% include "_partials/_nav.html.twig" %}
 					{% if figure.getImage()|length > 0 %}
 						<div class="view" style="background-image: url('{{ asset('uploads/images/' ~ firstImage.slug) }}');">
 						{% else %}
@@ -241,25 +244,6 @@
 								{% endfor %}
 								<!-- Card img 2 -->
 
-								{{ form_start(editForm) }}
-								{{ form_errors(editForm) }}
-								{{ form_row(editForm.image) }}
-
-								<label>Vidéos</label>
-								<div class="form-control" data-prototype="{{ form_widget(editForm.videos.vars.prototype)|e('html_attr') }}">
-									{% for video in editForm.videos %}
-										<div class="video-input">
-											{{ form_row(video) }}
-											<button type="button" class="btn btn-danger remove-video mt-2">Supprimer</button>
-										</div>
-									{% endfor %}
-								</div>
-								<button type="button" class="btn btn-secondary mt-2" id="add-video">+</button>
-
-
-							</div>
-						</div>
-
 
 						<div class="container">
 							<div class="row">
@@ -271,6 +255,28 @@
 								</div>
 							</div>
 						</div>
+								{{ form_start(editForm) }}
+								{{ form_errors(editForm) }}
+								{{ form_row(editForm.image) }}
+
+								<label>Vidéos</label>
+								<div class="form-control" data-prototype="{{ form_widget(editForm.videos.vars.prototype)|e('html_attr') }}">
+								<p> Ajout de vidéos ("cliquez sur "+") </p>
+									{% for video in editForm.videos %}
+										<div class="video-input">
+											{{ form_row(video) }}
+											<button type="button" class="btn btn-danger remove-video">Supprimer</button>
+										</div>
+									{% endfor %}
+								</div>
+								<button type="button" class="btn btn-secondary mt-2" id="add-video">+</button>
+
+
+							</div>
+						</div>
+
+
+
 
 						<div class="container">
 							<div class="row">
@@ -319,7 +325,7 @@
 let collectionHolder = document.querySelector('[data-prototype]');
 let prototype = collectionHolder.dataset.prototype;
 let newForm = prototype.replace(/__name__/g, collectionHolder.children.length);
-collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video">Supprimer</button></div>');
+collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video mt-2">-</button></div>');
 });
 
 document.addEventListener('click', function (event) {
@@ -327,6 +333,27 @@ if (event.target.classList.contains('remove-video')) {
 event.target.parentElement.remove();
 }
 });
+
+
+ const showAllImagesButton = document.querySelector('.show-all-images');
+  const hideAllImagesButton = document.querySelector('.hide-all-images');
+  const allImagesContainers = document.querySelectorAll('.d-md-block');
+  
+  showAllImagesButton.addEventListener('click', function() {
+    allImagesContainers.forEach(container => {
+      container.classList.remove('d-none');
+    });
+    showAllImagesButton.classList.add('d-none');
+    hideAllImagesButton.classList.remove('d-none');
+  });
+  
+  hideAllImagesButton.addEventListener('click', function() {
+    allImagesContainers.forEach(container => {
+      container.classList.add('d-none');
+    });
+    hideAllImagesButton.classList.add('d-none');
+    showAllImagesButton.classList.remove('d-none');
+  });
 				</script>
 
 			{% endblock %}

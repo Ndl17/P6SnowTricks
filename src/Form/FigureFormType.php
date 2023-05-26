@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Figure;
 use App\Entity\Groupe;
+use PHPUnit\TextUI\Help;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -35,20 +36,19 @@ class FigureFormType extends AbstractType
 
             ->add('imagesFiles', FileType::class, [
                 'label' => 'Uploadez une image',
+                'required' => false,
                 'mapped' => false,
                 'multiple' => true,
-                'required' => false,
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new All([
                         'constraints' => [
                             new File([
-                                'maxSize' => '1024k',
-                                'mimeTypesMessage' => 'Veuillez uploader un fichier au format jpeg ou png',
+                                'maxSize' => '3072k',
                                 'mimeTypes' => [
-                                    'image/jpeg',
-                                    'image/png',
+                                    'image/*',
                                 ],
+                                'mimeTypesMessage' => 'Veuillez uploader un fichier au bon format',
                             ]),
                         ],
                     ]),
@@ -64,7 +64,7 @@ class FigureFormType extends AbstractType
 
             ->add('videos', CollectionType::class, [
                 'entry_type' => UrlType::class,
-                'label' => 'Vidéos',
+                'label' => 'Insérez une vidéo',
                 'required' => false,
                 'mapped' => false,
                 'allow_add' => true,
