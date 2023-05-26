@@ -18,6 +18,30 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
+
+    
+    private $userRepository;
+    private $mail;
+    private $jwt;
+    private $figureService;
+    private $entityManager;
+
+    public function __construct(
+        UserRepository $userRepository, 
+        SendMailService $mail,
+        JWTService $jwt,
+        EntityManagerInterface $entityManager
+        )
+    {
+        $this->userRepository = $userRepository;
+        $this->mail = $mail;
+        $this->jwt = $jwt;
+        $this->entityManager = $entityManager;
+
+   
+    }
+
+
     #[Route('/register', name:'app_register')]
     /**
      * Summary of register
@@ -30,7 +54,7 @@ class RegistrationController extends AbstractController
      * @param \App\Service\JWTService $jwt
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator, EntityManagerInterface $entityManager, SendMailService $mail, JWTService $jwt): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -46,8 +70,8 @@ class RegistrationController extends AbstractController
             );
 
             $user->setIsVerified(false);
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
             //on génére le jwt de l'utilisateur
             $header = [
@@ -60,10 +84,10 @@ class RegistrationController extends AbstractController
             ];
             // on génere le token
 
-            $token = $jwt->generate($header, $payload, $_ENV['JWT_SECRET']);
+            $token =  $this->jwt->generate($header, $payload, $_ENV['JWT_SECRET']);
             // on envoie le mail de confirmation
 
-            $mail->send('noreply@snowtricks.com',
+            $this->mail->send('noreply@snowtricks.com',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'confirmationRegister',
@@ -87,21 +111,21 @@ class RegistrationController extends AbstractController
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function verify(UserRepository $userRepository, string $token, JWTService $jwt, EntityManagerInterface $entityManager): Response
+    public function verify(string $token): Response
     {
 
         // on verifie que le token est valide, pas expiré et pas modif
-        if ($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
+        if ( $this->jwt->isValid($token) && ! $this->jwt->isExpired($token) &&  $this->jwt->check($token, $this->getParameter('app.jwtsecret'))) {
             // on récupère le payload
-            $payload = $jwt->getPayload($token);
+            $payload =  $this->jwt->getPayload($token);
             // on récupère l'utilisateur
-            $user = $userRepository->find($payload['user_id']);
+            $user = $this->userRepository->find($payload['user_id']);
             // on vérifie que l'utilisateur existe et n'a pas activé son compte
             if ($user && !$user->getIsVerified()) {
                 // on active le compte
                 $user->setIsVerified(true);
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
                 $this->addFlash('success', 'Votre compte a bien été activé !');
                 return $this->redirectToRoute('app_login');
 
@@ -121,7 +145,7 @@ class RegistrationController extends AbstractController
      * @param \App\Service\SendMailService $mail
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function resend(UserRepository $userRepository, JWTService $jwt, SendMailService $mail): Response
+    public function resend(): Response
     {
 
         $user = $this->getUser();
@@ -145,10 +169,10 @@ class RegistrationController extends AbstractController
         ];
         // on génere le token
 
-        $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
+        $token =  $this->jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
         // on envoie le mail de confirmation
 
-        $mail->send('noreply@snowtricks.com',
+        $this->mail->send('noreply@snowtricks.com',
             $user->getEmail(),
             'Activation de votre compte',
             'confirmationRegister',
