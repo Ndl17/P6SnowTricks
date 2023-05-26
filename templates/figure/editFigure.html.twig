@@ -10,6 +10,90 @@
 			.custom-margin {
 				margin-right: 10px;
 			}
+
+
+			.title {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				text-align: center;
+				font-size: 30px;
+				color: white;
+			}
+
+			.view {
+				position: relative;
+				background-size: cover;
+				height: 80vw;
+				width: 100vw;
+			}
+
+			#gridCards {
+
+				height: 80vw;
+				width: 100vw;
+			}
+
+			.edit-icon {
+				margin: 2px;
+			}
+
+			.delete-icon {
+				margin: 2px;
+			}
+
+			.iconEdit:hover,
+			.iconBin:hover {
+				transform: scale(1.2);
+				z-index: 1;
+			}
+
+			.iconEdit {
+				position: absolute;
+				top: 100px;
+				right: 50px;
+				background-color: white;
+				border-radius: 5px;
+				transition: all 0.3s ease-in-out;
+			}
+			.iconBin {
+				position: absolute;
+				top: 100px;
+				right: 100px;
+				background-color: white;
+				border-radius: 5px;
+				transition: all 0.3s ease-in-out;
+			}
+
+
+			.commentContent {
+				margin-left: 10px;
+			}
+
+			#profilePic {
+				margin-top: 10px;
+				margin-left: 5px;
+			}
+
+			.shadow {
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10) !important;
+			}
+
+			label {
+				display: none !important;
+			}
+
+			#comment_form_Envoyer {
+				margin-top: 10px
+			}
+
+			@media screen and(max-width: 767px) {
+				.img_responsive {
+					display: block !important;
+					width: 100% !important;
+				}
+			}
 		</style>
 
 		<div class="container">
@@ -18,55 +102,207 @@
 					<h1>Formulaire de modification d'une figure
 					</h1>
 					{% include '_partials/_alerts.html.twig' %}
-					{{ form_start(editForm) }}
-					{{ form_errors(editForm) }}
-					{{ form_row(editForm.name) }}
-					{{ form_row(editForm.description) }}
-					{{ form_row(editForm.groupe) }}
-					{{ form_row(editForm.imagesFiles) }}
-					<label>Vidéos</label>
-					<div class="form-control" data-prototype="{{ form_widget(editForm.videos.vars.prototype)|e('html_attr') }}">
-						{% for video in editForm.videos %}
-							<div class="video-input">
-								{{ form_row(video) }}
-								<button type="button" class="btn btn-danger remove-video mt-2">Supprimer</button>
-							</div>
-						{% endfor %}
-					</div>
-					<button type="button" class="btn btn-secondary mt-2" id="add-video">Ajouter une vidéo</button>
 
 
-					<p>Supprimer des Images:
-					</p>
-					<ul>
-						{% for image in figure.getImage() %}
-							<div class="form-group form-check">
-								<input type="checkbox" class="form-check-input" name="deleteImages[]" value="{{ image.id }}" id="deleteImages_{{ image.id }}">
-								<label class="form-check-label">
-									<img src="{{ asset('uploads/images/'~ image.slug) }}" height="100" width="100">
-								</label>
-							</div>
-						{% endfor %}
-					</ul>
+					{% include "_partials/_nav.html.twig" %}
+					{% if figure.getImage()|length > 0 %}
+						<div class="view" style="background-image: url('{{ asset('uploads/images/' ~ firstImage.slug) }}');">
+						{% else %}
+							<div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
+							{% endif %}
+							<div class="container">
+								<div class="row">
+									<div class="col-md-12">
+
+										<h1 class="title" data-wow-delay="0.4s">
+											<strong>{{ figure.name }}</strong>
+										</h1>
 
 
-					<p>Supprimer des Vidéos:
-					</p>
-					<ul>
-						{% for video in figure.getVideos() %}
-							<div class="form-group form-check">
-								<label class="form-check-label">
-									<iframe src="{{video.url}}" frameborder="0"></iframe>
-
-									<input type="checkbox" class="form-check-input" name="deleteVideos[]" value="{{ video.id }}" id="deleteImages_{{ video.id }}">
+{% set image = figure.getImage()|first %}
+{% if app.user and image %}
+    <div class="iconBin">
+        <a href="{{ path('image_delete', {id:image.id}) }}">
+            <i data-acorn-icon="bin" class="text-primary  delete-icon" data-acorn-size="30"></i>
+        </a>
+    </div>
+{% endif %}
+									</div>
 								</div>
-							{% endfor %}
-						</ul>
+							</div>
+						</div>
 
-						<div class="d-flex justify-content-start">
+						<div class="row g-2 mt-5">
+							<div class="col-12 col-xl-4 mb-5">
+								<div class="card bg-gradient-light">
+									<div class="h-100 row g-0 card-body align-items-center">
+										<div class="col-auto">
+											<div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+												<i data-acorn-icon="calendar" class="text-white"></i>
+											</div>
+										</div>
+										<div class="col">
+											<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Crée le
+											</div>
+										</div>
+										<div class="col-auto ps-3">
+											<div class="display-5 text-white">{{ figure.CreatedAt|date('Y-m-d') }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 col-xl-4 mb-5">
+
+
+								<div class="card active">
+									<div class="h-100 row g-0 card-body align-items-center">
+										<div class="col-auto">
+											<div class="sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center border border-primary">
+												<i data-acorn-icon="loaf" class="text-primary"></i>
+											</div>
+										</div>
+										<div class="col">
+											{% if figure.getGroupe()|length > 0 %}
+												<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">
+													{{ figure.getGroupe().name }}</div>
+											{% else %}
+												<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">
+													Pas de groupe
+												</div>
+											{%  endif %}
+										</div>
+										<div class="col-auto ps-3">
+											<div class="display-5 text-primary"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-xl-4 mb-5">
+								<div class="card bg-gradient-light">
+									<div class="h-100 row g-0 card-body align-items-center">
+										<div class="col-auto">
+											<div class="border border-foreground sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center">
+												<i data-acorn-icon="calendar" class="text-white"></i>
+											</div>
+										</div>
+										<div class="col">
+											<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3 text-white">Modifié le
+											</div>
+										</div>
+										<div class="col-auto ps-3">
+											<div class="display-5 text-white">{{ figure.ModifiedAt|date('Y-m-d') }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Grid Start -->
+
+
+						<div class="container">
+							<div class="row mt-5 mb-5">
+								{% for image in figure.getImage() %}
+									<div class="col-3 img_responsive d-none d-md-block mb-3">
+										<div>
+											<a href="{{ path('image_delete', {id:image.id}) }}">
+												<i data-acorn-icon="bin" class="text-primary  " data-acorn-size="30"></i>
+											</a>
+
+											<div class="card">
+
+												<button type="button" class="btn btn-primary btnfilm">
+
+													<img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image"/>
+
+												</button>
+
+											</div>
+
+										</div>
+									</div>
+								{% endfor %}
+
+
+								{% for video in figure.getVideos() %}
+									<div class="col-3 img_responsive d-none d-md-block">
+										<a href="{{ path('videos_delete', {id:video.id}) }}">
+											<i data-acorn-icon="bin" class="text-primary  delete-icon" data-acorn-size="30"></i>
+										</a>
+
+										<div>
+											<button type="button" class="btn btn-primary btnfilm" data-bs-toggle="modal" data-bs-target="#img1">
+												<iframe src="{{ video.url }}" frameborder="0"></iframe>
+											</button>
+										</div>
+									</div>
+								{% endfor %}
+								<!-- Card img 2 -->
+
+								{{ form_start(editForm) }}
+								{{ form_errors(editForm) }}
+								{{ form_row(editForm.image) }}
+
+								<label>Vidéos</label>
+								<div class="form-control" data-prototype="{{ form_widget(editForm.videos.vars.prototype)|e('html_attr') }}">
+									{% for video in editForm.videos %}
+										<div class="video-input">
+											{{ form_row(video) }}
+											<button type="button" class="btn btn-danger remove-video mt-2">Supprimer</button>
+										</div>
+									{% endfor %}
+								</div>
+								<button type="button" class="btn btn-secondary mt-2" id="add-video">+</button>
+
+
+							</div>
+						</div>
+
+
+						<div class="container">
+							<div class="row">
+								<div class="col-12 d-md-none text-center mb-5">
+									<button type="button" class="btn btn-primary show-all-images">Afficher toutes les images</button>
+									<button type="button" class="btn btn-secondary hide-all-images d-none">Cacher toutes les images</button>
+
+
+								</div>
+							</div>
+						</div>
+
+						<div class="container">
+							<div class="row">
+								<div class="col">
+									<div class="card">
+										<div class="card-body">
+											<h1 class="text-center font-weight-bold">{{ form_row(editForm.name) }}</h1>
+											<p class="text-center">{{ form_row(editForm.description) }}</p>
+
+											<div class="col">
+
+												<div class="heading mb-0 sh-8 d-flex align-items-center lh-1-25 ps-3">
+													{{ form_row(editForm.groupe) }}</div>
+
+											</div>
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="d-flex justify-content-start mt-5 mb-5" style="margin-left: 20px;">
 							{{ form_row(editForm.Envoyer, {'attr': {'class': 'btn btn-success custom-margin'}}) }}
-							<a href="{{ path('home') }}"><button type="button" class="btn btn-info custom-margin">Retour</button></a>
-							<a href="{{ path('home_delete', {slug:figure.slug}) }}"><button type="button" class="btn btn-danger" style="margin-right: 5px;">Supprimer</button></a>
+							<a href="{{ path('home') }}">
+								<button type="button" class="btn btn-info custom-margin">Retour</button>
+							</a>
+							<a href="{{ path('home_delete', {slug:figure.slug}) }}">
+								<button type="button" class="btn btn-danger" style="margin-right: 5px;">Supprimer</button>
+							</a>
 
 						</div>
 
@@ -75,20 +311,22 @@
 						{{ form_end(editForm, {'render_rest': false}) }}
 
 					</div>
+
+
 				</body>
 				<script>
 					document.getElementById('add-video').addEventListener('click', function () {
-						let collectionHolder = document.querySelector('[data-prototype]');
-						let prototype = collectionHolder.dataset.prototype;
-						let newForm = prototype.replace(/__name__/g, collectionHolder.children.length);
-						collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video">Supprimer</button></div>');
-						});
+let collectionHolder = document.querySelector('[data-prototype]');
+let prototype = collectionHolder.dataset.prototype;
+let newForm = prototype.replace(/__name__/g, collectionHolder.children.length);
+collectionHolder.insertAdjacentHTML('beforeend', '<div class="video-input">' + newForm + '<button type="button" class="btn btn-danger remove-video">Supprimer</button></div>');
+});
 
-						document.addEventListener('click', function (event) {
-						if (event.target.classList.contains('remove-video')) {
-						event.target.parentElement.remove();
-						}
-					});
+document.addEventListener('click', function (event) {
+if (event.target.classList.contains('remove-video')) {
+event.target.parentElement.remove();
+}
+});
 				</script>
 
 			{% endblock %}

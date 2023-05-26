@@ -225,6 +225,8 @@ class FigureController extends AbstractController
         // Récupération de la figure à éditer depuis la base de données
         $figure = $figureRepository->findOneBy(['slug' => $slug]);
         $images = $figure->getImage();
+        $firstImage = $figure->getImage()->first();
+
         // Vérification si la figure existe
         if (!$figure) {
             throw $this->createNotFoundException('Figure non trouvée');
@@ -232,9 +234,8 @@ class FigureController extends AbstractController
 
         // Création du formulaire d'édition
         $form = $this->createForm(EditFigureFormType::class, $figure);
-
         $form->handleRequest($request);
-
+  
         // Vérification si le formulaire a été soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -246,7 +247,7 @@ class FigureController extends AbstractController
                 return $this->redirectToRoute('home_index');
             }
             // Récupération de l'entité gérant l'upload des images
-            $imageFiles = $form->get('imagesFiles')->getData();
+            $imageFiles = $form->get('image')->getData();
 
             //on fait appel au service pour ajouter les images
             $imageService->addImage($imageFiles, $figure, $slugger);
@@ -263,34 +264,6 @@ class FigureController extends AbstractController
             $figure->setModifiedAt($now);
             $figure->setSlug(strtolower(str_replace(' ', '-', $figure->getName())));
 
-            $deleteImagesIds = $request->get('deleteImages');
-            $deleteVideosIds = $request->get('deleteVideos');
-
-            // Suppression des images cochées
-            if (!empty($deleteImagesIds)) {
-                foreach ($deleteImagesIds as $deleteImageId) {
-                    $image = $entityManager->getRepository(Images::class)->find($deleteImageId);
-                    if ($image) {
-                        $imagePath = $this->getParameter('images_directory') . '/' . $image->getSlug();
-                        if (file_exists($imagePath)) {
-                            unlink($imagePath);
-                        }
-                        $entityManager->remove($image);
-                        $entityManager->flush();
-                    }
-                }
-            }
-
-            // Suppression des videos cochées
-            if (!empty($deleteVideosIds)) {
-                foreach ($deleteVideosIds as $deleteVideosId) {
-                    $video = $entityManager->getRepository(Videos::class)->find($deleteVideosId);
-                    if ($video) {
-                        $entityManager->remove($video);
-                        $entityManager->flush();
-                    }
-                }
-            }
             $entityManager->persist($figure);
             $entityManager->flush();
 
@@ -304,6 +277,12 @@ class FigureController extends AbstractController
             'figure' => $figure,
             'images' => $images,
             'editForm' => $form->createView(),
+            'firstImage' => $firstImage,
         ]);
     }
-}
+
+    }
+
+
+
+
