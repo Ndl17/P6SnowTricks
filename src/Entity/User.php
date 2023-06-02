@@ -36,10 +36,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, unique: true)]
     private ?string $pseudo = null;
 
-    #[ORM\OneToMany(mappedBy: 'idPseudo', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Figure::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Figure::class, orphanRemoval: true)]
     private Collection $figures;
 
     #[ORM\Column(length: 255, nullable: true)]
