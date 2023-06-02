@@ -28,7 +28,7 @@ class FigureCreationService
         // Set created date only for new Figure
         if ($isNew) {
             $figure->setCreatedAt($now);
-            $figure->setUserId($this->security->getUser());  // Set user id for new Figure
+            $figure->setUser($this->security->getUser());  // Set user id for new Figure
         }
 
         // Slug generation

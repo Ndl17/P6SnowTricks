@@ -27,8 +27,8 @@ class CommentCreationService
         $now = $this->dateTimeProviderService->getCurrentDateTime();
         $comment->setContent($content);
         $comment->setCreatedAt($now);
-        $comment->setIdPseudo($user);
-        $comment->setIdFigure($figure);
+        $comment->setUser($user);
+        $comment->setFigure($figure);
         $this->entityManager->persist($comment);
         $this->entityManager->flush();
 

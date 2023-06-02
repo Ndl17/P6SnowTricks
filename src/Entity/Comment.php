@@ -18,11 +18,11 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $idPseudo = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Figure $idFigure = null;
+    private ?Figure $figure = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -44,26 +44,26 @@ class Comment
         return $this;
     }
 
-    public function getIdPseudo(): ?User
+    public function getUser(): ?User
     {
-        return $this->idPseudo;
+        return $this->user;
     }
 
-    public function setIdPseudo(?User $idPseudo): self
+    public function setUser(?User $user): self
     {
-        $this->idPseudo = $idPseudo;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getIdFigure(): ?Figure
+    public function getFigure(): ?Figure
     {
-        return $this->idFigure;
+        return $this->figure;
     }
 
-    public function setIdFigure(?Figure $idFigure): self
+    public function setFigure(?Figure $figure): self
     {
-        $this->idFigure = $idFigure;
+        $this->figure = $figure;
 
         return $this;
     }
