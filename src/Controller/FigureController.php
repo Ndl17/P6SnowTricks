@@ -214,7 +214,7 @@ class FigureController extends AbstractController
      * @return Response
      */
     #[Route('/{slug}/edit', name:'edit')]
-    public function editFig($slug, Request $request): Response
+    public function editFig(string $slug, Request $request): Response
     {
         // Récupération de la figure à éditer depuis la base de données
         $figure = $this->figureRepository->findOneBy(['slug' => $slug]);

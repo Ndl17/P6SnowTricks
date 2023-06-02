@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Comment;
+use App\Entity\Figure;
 use App\Service\DateTimeProviderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -20,7 +21,7 @@ class CommentCreationService
         $this->security = $security;
     }
 
-    public function createComment($content, $figure)
+    public function createComment(string $content, Figure $figure)
     {
         $comment = new Comment;
         $user = $this->security->getUser();
