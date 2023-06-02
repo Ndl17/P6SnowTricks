@@ -148,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
-            $comment->setIdPseudo($this);
+            $comment->setUser($this);
         }
 
         return $this;
@@ -158,8 +158,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getIdPseudo() === $this) {
-                $comment->setIdPseudo(null);
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 
@@ -178,7 +178,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->figures->contains($figure)) {
             $this->figures->add($figure);
-            $figure->setUserId($this);
+            $figure->setUser($this);
         }
 
         return $this;
@@ -188,8 +188,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->figures->removeElement($figure)) {
             // set the owning side to null (unless already changed)
-            if ($figure->getUserId() === $this) {
-                $figure->setUserId(null);
+            if ($figure->getUser() === $this) {
+                $figure->setUser(null);
             }
         }
 

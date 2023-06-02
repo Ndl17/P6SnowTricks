@@ -31,12 +31,12 @@ class Figure
   #[ORM\Column]
   private ?\DateTimeImmutable $modified_at = null;
 
-  #[ORM\OneToMany(mappedBy: 'idFigure', targetEntity: Comment::class, orphanRemoval: true)]
+  #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Comment::class, orphanRemoval: true)]
   private Collection $comments;
 
   #[ORM\ManyToOne(inversedBy: 'figures')]
   #[ORM\JoinColumn(nullable: false)]
-  private ?User $userId = null;
+  private ?User $user = null;
 
 
   #[ORM\ManyToOne(inversedBy: 'figures')]
@@ -120,7 +120,7 @@ class Figure
   {
     if (!$this->comments->contains($comment)) {
       $this->comments->add($comment);
-      $comment->setIdFigure($this);
+      $comment->setFigure($this);
     }
 
     return $this;
@@ -130,22 +130,22 @@ class Figure
   {
     if ($this->comments->removeElement($comment)) {
       // set the owning side to null (unless already changed)
-      if ($comment->getIdFigure() === $this) {
-        $comment->setIdFigure(null);
+      if ($comment->getFigure() === $this) {
+        $comment->setFigure(null);
       }
     }
 
     return $this;
   }
 
-  public function getUserId(): ?User
+  public function getUser(): ?User
   {
-    return $this->userId;
+    return $this->user;
   }
 
-  public function setUserId(?User $userId): self
+  public function setUser(?User $user): self
   {
-    $this->userId = $userId;
+    $this->user = $user;
 
     return $this;
   }

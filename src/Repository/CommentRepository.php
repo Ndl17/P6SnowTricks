@@ -48,8 +48,8 @@ class CommentRepository extends ServiceEntityRepository
     $qb = $this->createQueryBuilder('c');
     $qb->select('c')
     ->addSelect('u.pseudo, c.content, c.created_at')
-    ->leftJoin('c.idPseudo', 'u')
-    ->leftJoin('c.idFigure', 'f')
+    ->leftJoin('c.user', 'u')
+    ->leftJoin('c.figure', 'f')
     ->where('f.id = :figure_id')
     ->setParameter('figure_id', $figureId)
     ->orderBy('c.created_at', 'DESC')

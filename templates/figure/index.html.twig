@@ -1,109 +1,217 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Hello MainController!
+{% endblock %}
 
 {% block body %}
-<style>
+	<style>
 
-.title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  font-size: 30px;
-  color: white;
-}
+		.title {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			font-size: 30px;
+			color: white;
+		}
 
-.view {
-  position: relative;
-  background-size: cover;
-  height: 80vw;
-  width: 100vw;
-}
+		.view {
+			position: relative;
+			background-size: cover;
+			height: 80vw;
+			width: 100vw;
+		}
 
-</style>
+		.scrollToTopBtn {
+			background-color: #f05a5a;
+			border: none;
+			color: white;
+			cursor: pointer;
+			font-size: 18px;
+			line-height: 48px;
+			width: 48px;
 
-<body>
+			/* place it at the bottom right corner */
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			/* keep it at the top of everything else */
+			z-index: 100;
+			/* hide with opacity */
+			opacity: 1;
+			transform: translateY(0);
+			border-radius: 50%;
+		}
 
+		.modal-body-text {
+			margin-top: 20px; /* Adjust as needed */
+		}
+	</style>
 
-  {% include "_partials/_nav.html.twig" %}
-  <div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="title" data-wow-delay="0.4s"><strong>SnowTricks Community</strong></h1>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="col-md-12 py-5 ml-5 mr-5">
-    <!-- Grid Start -->
-    {% include '_partials/_alerts.html.twig' %}
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5"  id="gridCards">
-
-
-      {% for figure in figures %}
-      <div class="col">
-        <div class="card h-100" id="cards">
-          {% if figure.getImage()|length > 0 %}
-          {% set firstImage = true %}
-          {% for image in figure.getImage() %}
-          {% if firstImage and image %}
-          <img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image" />
-          {% set firstImage = false %}
-          {% endif %}
-          {% endfor %}
-          {% else %}
-          <img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image" />
-          {% endif %}
-          <div class="card-body">
-            <div class='card-heading'>
-              <h5 class="heading mb-3">
-                <a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link" >
-                  <span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
-                </a>
-              </h5>
-            </div>
-            {% if app.user %}
-            <div>
-              <div class="row g-0">
-                <div class="col-auto pe-3">
-                <a href="{{ path('home_edit', {slug:figure.slug}) }}" class="body-link">
-                  <i data-acorn-icon="edit" class="text-primary me-1" data-acorn-size="15"></i>
-                 </a>
-              </div>
-              <div class="col">
-                <a href="{{ path('home_delete', {slug:figure.slug}) }}" class="body-link">
-                  <i data-acorn-icon="bin" class="text-primary me-1" data-acorn-size="15"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-        </div>
-
-      </div>
-    </div>
+	<body>
 
 
-    {% endfor %}
-  </div>
+		{% include "_partials/_nav.html.twig" %}
+		<div class="view" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="title" data-wow-delay="0.4s">
+							<strong>SnowTricks Community</strong>
+						</h1>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  <!-- Grid End -->
 
-  <div class="row">
-    <div class="col-12 text-center">
-      <button class="btn btn-xl btn-outline-primary sw-30">Load More</button>
-    </div>
-  </div>
+		<div
+			class="col-md-12 py-5 ml-5 mr-5">
+			<!-- Grid Start -->
+			{% include '_partials/_alerts.html.twig' %}
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-2 mb-5" id="gridCards">
 
-</div>
 
-</body>
+				{% for figure in figures %}
+					<div class="col">
+						<div class="card h-100 figure" style="display: none;" id="cards">
+							{% if figure.getImage()|length > 0 %}
+								{% set firstImage = true %}
+								{% for image in figure.getImage() %}
+									{% if firstImage and image %}
+										<img src="{{ asset('uploads/images/' ~ image.slug) }}" class="card-img-top sh-19" alt="card image"/>
+										{% set firstImage = false %}
+									{% endif %}
+								{% endfor %}
+							{% else %}
+								<img src="../assets/img/trickshome.png" class="card-img-top sh-19" alt="card image"/>
+							{% endif %}
+							<div class="card-body">
+								<div class='card-heading'>
+									<h5 class="heading mb-3">
+										<a href="{{ path('home_details', {slug:figure.slug}) }}" class="body-link">
+											<span class="clamp-line sh-5" data-line="2">{{ figure.name }}</span>
+										</a>
+									</h5>
+								</div>
+								{% if app.user %}
+									<div>
+										<div class="row g-0">
+											<div class="col-auto pe-3">
+												<a href="{{ path('home_edit', {slug:figure.slug}) }}" class="body-link">
+													<i data-acorn-icon="edit" class="text-primary me-1" data-acorn-size="15"></i>
+												</a>
+											</div>
+											<div class="col">
+												<a href="" class="body-link" data-bs-toggle="modal" data-bs-target="#smExample-{{figure.slug}}">
+													<i data-acorn-icon="bin" class="text-primary me-1" data-acorn-size="15"></i>
+												</a>
+
+											</div>
+											<div class="modal fade" id="smExample-{{figure.slug}}" tabindex="-1" role="dialog" aria-hidden="true">
+												<div class="modal-dialog modal-sm">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" style="font-weight: bold;">Confirmer la suppression de la figure ?</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+
+														<div class="modal-footer">
+															<div class="container">
+																<div class="row">
+																	<div class="col-6">
+																		<button type="button" class="btn btn-secondary w-100">
+																			<a href="{{ path('home_delete', {slug:figure.slug}) }}">
+																				Oui
+																			</a>
+																		</button>
+																	</div>
+																	<div class="col-6">
+																		<button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">
+																			Non
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							</div>
+
+						</div>
+					</div>
+
+
+				{% endfor %}
+			</div>
+			<button class="scrollToTopBtn">☝️</button>
+
+			<!-- Grid End -->
+
+			<div class="row">
+				<div class="col-12 text-center">
+					<button class="btn btn-xl btn-outline-primary sw-30" id="loadMore">Load More</button>
+				</div>
+			</div>
+
+
+		</div>
+
+	</body>
+	{% block script %}
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script>
+			$(document).ready(function () {
+      let figuresToShowAtOnce = 10;
+      let figures = $(".figure");
+      let totalFigures = figures.length;
+      let figuresToShow = figuresToShowAtOnce;
+
+      // Affichez initialement un certain nombre de figures
+      figures.slice(0, figuresToShow).show();
+
+      // Lorsque "Load More" est cliqué, affichez plus de figures
+      $("#loadMore").click(function (e) {
+      e.preventDefault();
+
+      figuresToShow += figuresToShowAtOnce;
+
+      // Affichez les figures suivantes
+      figures.slice(0, figuresToShow).slideDown();
+
+      // Si toutes les figures sont affichées, cachez le bouton "Load More"
+      if (figuresToShow >= totalFigures) {
+      $("#loadMore").hide();
+      }
+      });
+});
+
+
+    var scrollToTopBtn = document.querySelector(".scrollToTopBtn");
+    var rootElement = document.documentElement;
+
+function handleScroll() { // Do something on scroll
+    var scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+    if (rootElement.scrollTop / scrollTotal > 0.2) { // Show button
+    scrollToTopBtn.classList.add("showBtn");
+    } else { // Hide button
+    scrollToTopBtn.classList.remove("showBtn");
+    }
+    }
+
+function scrollToTop() { // Scroll to top logic
+    rootElement.scrollTo({top: 0, behavior: "smooth"});
+ }
+    scrollToTopBtn.addEventListener("click", scrollToTop);
+    document.addEventListener("scroll", handleScroll);
+		</script>
+{% endblock %}
 {% endblock %}
 {% block footer %}
-{% include "_partials/_footer.html.twig" %}
+	{% include "_partials/_footer.html.twig" %}
 {% endblock %}

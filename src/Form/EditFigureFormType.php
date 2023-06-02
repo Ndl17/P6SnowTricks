@@ -34,46 +34,44 @@ class EditFigureFormType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'required' => false,
             ])
+            ->add('image', FileType::class, [
+                'label' => 'Uploadez une image',
+                'required' => false,
+                'mapped' => false,
+                'multiple' => true,
+                'attr' => ['class' => 'form-control mb-5'],
+                'constraints' => [
+                    new All([
+                        'constraints' => [
+                            new File([
+                                'maxSize' => '3072k',
+                                'mimeTypes' => [
+                                    'image/*'
+                                ],
+                                'mimeTypesMessage' => 'Veuillez uploader un fichier au bon format',
+                            ])
+                        ]
+                    ])
+                ]
+            ])
+            ->add('videos', CollectionType::class, [
+                'entry_type' => UrlType::class,
+                'label' => 'Vidéos',
+                'required' => false,
+                'mapped' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'attr' => ['class' => 'form-control mt-2'],
+                'entry_options' => [
+                    'attr' => ['class' => 'form-control mt-2'],
+                ],
+            ])
+
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
-
-            ->add('imagesFiles', FileType::class, [
-                'label' => 'Uploadez une image',
-                'mapped' => false,
-                'multiple' => true,
-                'required' => false,
-                'attr' => ['class' => 'form-control'],
-                'constraints' => [
-                    new All([
-                        'constraints' => [
-                            new File([
-                                'maxSize' => '1024k',
-                                'mimeTypesMessage' => 'Veuillez uploader un fichier au format jpeg ou png',
-                                'mimeTypes' => [
-                                    'image/jpeg',
-                                    'image/png',
-                                ]
-                            ]),
-                        ],
-                    ]),
-                ]
-            ])
-
-    ->add('videos', CollectionType::class, [
-      'entry_type' => UrlType::class,
-      'label' => 'Vidéos',
-      'required' => false,
-      'mapped' => false,
-      'allow_add' => true,
-      'allow_delete' => true,
-      'attr' => ['class' => 'form-control'],
-      'entry_options' => [
-        'attr' => ['class' => 'form-control'],
-      ],
-    ])
 
             ->add('Envoyer', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],

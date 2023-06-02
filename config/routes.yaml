@@ -8,6 +8,22 @@ home:
     path: /home
     controller: App\Controller\FigureController
 
+image:
+    path: /image
+    controller: App\Controller\ImageController
+
+image_delete:
+    path: /image/delete/{id}
+    controller: App\Controller\ImageController::deleteImage
+
+videos:
+    path: /videos
+    controller: App\Controller\VideosController
+
+videos_delete:
+    path: /videos/delete/{id}
+    controller: App\Controller\VideosController::deleteVideos
+
 index:
   path: /
   controller: App\Controller\FigureController::index
