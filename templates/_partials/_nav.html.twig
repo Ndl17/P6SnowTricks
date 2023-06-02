@@ -5,7 +5,22 @@
   flex-direction: row;
   justify-content: flex-end;
 }
+
+.logoImg{
+width:100%;
+  object-fit: contain;
+}
+
 </style>
+
+<style media="screen">
+  /* ... Vos autres styles CSS ... */
+
+  .logo-full-width img {
+    width: 100% !important;
+  }
+</style>
+
 <div id="root">
   <div id="nav" class="nav-container d-flex">
     <div class="nav-content d-flex">
@@ -13,10 +28,11 @@
       <div class="logo position-relative">
         <a href="{{path('home')}}">
           <!-- Logo can be added directly -->
-          <!-- <img src="img/logo/logo-white.svg" alt="logo" /> -->
+            <div class="mb-2" style="margin-right:5px;">
+           <img src="{{ asset('assets/img/logo/logoFinal.svg') }}" alt="logo"  class="logoImg" />
 
           <!-- Or added via css to provide different ones for different color themes -->
-          <div class="img"></div>
+        </div>
         </a>
       </div>
       <!-- Logo End -->
@@ -109,7 +125,7 @@
         <!-- Mobile Buttons Start -->
         <div class="mobile-buttons-container">
           <!-- Scrollspy Mobile Button Start -->
-          <a href="#" id="scrollSpyButton" class="spy-button" data-bs-toggle="dropdown">
+          <a href="#" id="scrollSpyButton" class="spy-button" data-bs-toggle="dropdown" onclick="toggleLogoWidth()">
             <i data-acorn-icon="menu-dropdown"></i>
           </a>
           <!-- Scrollspy Mobile Button End -->
@@ -128,3 +144,14 @@
       </div>
       <div class="nav-shadow"></div>
     </div>
+
+{% block script %}
+<script>
+ function toggleLogoWidth() {
+    var logo = document.querySelector('.logo img');
+    logo.classList.toggle('logo-full-width');
+  }
+</script>
+
+
+{% endblock %}

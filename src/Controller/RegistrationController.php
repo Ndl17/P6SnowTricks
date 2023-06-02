@@ -23,7 +23,6 @@ class RegistrationController extends AbstractController
     private $userRepository;
     private $mail;
     private $jwt;
-    private $figureService;
     private $entityManager;
 
     public function __construct(
@@ -82,7 +81,7 @@ class RegistrationController extends AbstractController
             ];
             // on génere le token
 
-            $token =  $this->jwt->generate($header, $payload, $_ENV['JWT_SECRET']);
+            $token =  $this->jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
             // on envoie le mail de confirmation
 
             $this->mail->send('noreply@snowtricks.com',
