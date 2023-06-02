@@ -6,7 +6,7 @@ class JWTService
 {
 
     //ON GENERE LE TOKEN
-    public function generate(array $header, array $payload, string $secret, int $validity = 10800)
+    public function generate(array $header, array $payload, string $secret, int $validity = 10800) : string
     {
         if ($validity > 0) {
             $now = new \DateTimeImmutable ();
@@ -35,13 +35,13 @@ class JWTService
     }
 
     // on verifie que le token est valide
-    public function isValid(string $token)
+    public function isValid(string $token): bool
     {
         return preg_match('/^[a-zA-Z0-9\-\_\=]+\.+[a-zA-Z0-9\-\_\=]+\.+[a-zA-Z0-9\-\_\=]+$/', $token) === 1;
     }
 
 // on récupère payload
-    public function getPayload(string $token)
+    public function getPayload(string $token): array
     {
         //on démonte le token
         $payload = explode('.', $token)[1];
@@ -53,7 +53,7 @@ class JWTService
     }
 
 // on récupère le header
-    public function getHeader(string $token)
+    public function getHeader(string $token): array
     {
         //on démonte le token
         $header = explode('.', $token)[0];
@@ -63,7 +63,7 @@ class JWTService
         return $header;
     }
 
-    public function isExpired(string $token)
+    public function isExpired(string $token): bool
     {
         $payload = $this->getPayload($token);
         $now = new \DateTimeImmutable ();
@@ -73,7 +73,7 @@ class JWTService
 
 //on verifie la signature du token
 
-    public function check(string $token, string $secret)
+    public function check(string $token, string $secret): bool
     {
         // on recupère header et playload
         $header = $this->getHeader($token);

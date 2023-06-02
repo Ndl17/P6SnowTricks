@@ -6,19 +6,11 @@ controllers:
 
 home:
     path: /home
-    controller: App\Controller\FigureController
-
-image:
-    path: /image
-    controller: App\Controller\ImageController
-
+    controller: App\Controller\FigureController::index
+    
 image_delete:
     path: /image/delete/{id}
     controller: App\Controller\ImageController::deleteImage
-
-videos:
-    path: /videos
-    controller: App\Controller\VideosController
 
 videos_delete:
     path: /videos/delete/{id}

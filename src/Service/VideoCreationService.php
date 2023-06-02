@@ -7,7 +7,7 @@ use App\Entity\Videos;
 
 class VideoCreationService
 {
-  public function addVideo(array $videos, Figure $figure) {
+  public function addVideo(array $videos, Figure $figure): void {
     foreach ($videos as $video) {
       if ($video) {
         $vid = new Videos();

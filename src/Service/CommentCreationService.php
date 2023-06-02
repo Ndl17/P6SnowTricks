@@ -21,7 +21,7 @@ class CommentCreationService
         $this->security = $security;
     }
 
-    public function createComment(string $content, Figure $figure)
+    public function createComment(string $content, Figure $figure): Comment
     {
         $comment = new Comment;
         $user = $this->security->getUser();

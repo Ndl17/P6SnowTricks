@@ -49,7 +49,7 @@ class CommentFixtures extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies():array
     {
         return [
             UsersFixtures::class,
