@@ -9,10 +9,10 @@ use App\Form\EditFigureFormType;
 use App\Form\FigureFormType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
-use App\Service\ImageCreationService;
-use App\Service\VideoCreationService;
 use App\Service\CommentCreationService;
 use App\Service\FigureCreationService;
+use App\Service\ImageCreationService;
+use App\Service\VideoCreationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,14 +33,13 @@ class FigureController extends AbstractController
     private $entityManager;
 
     public function __construct(
-        ImageCreationService $imageService, 
-        VideoCreationService $videoService, 
-        CommentCreationService $commentService, 
+        ImageCreationService $imageService,
+        VideoCreationService $videoService,
+        CommentCreationService $commentService,
         FigureRepository $figureRepository,
         FigureCreationService $figureService,
         EntityManagerInterface $entityManager,
-        )
-    {
+    ) {
         $this->imageService = $imageService;
         $this->videoService = $videoService;
         $this->commentService = $commentService;
@@ -123,9 +122,9 @@ class FigureController extends AbstractController
 
             //on fait appel au service pour ajouter les images
             $this->imageService->addImage($imageFiles, $figure);
-           
+
             $this->figureService->setFigureDetails($figure, true);
-    
+
             //on persiste et on flush
             $this->entityManager->persist($figure);
             $this->entityManager->flush();
@@ -216,6 +215,8 @@ class FigureController extends AbstractController
     #[Route('/{slug}/edit', name:'edit')]
     public function editFig(string $slug, Request $request): Response
     {
+        // on verifie que l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('ROLE_USER');
         // Récupération de la figure à éditer depuis la base de données
         $figure = $this->figureRepository->findOneBy(['slug' => $slug]);
         $images = $figure->getImage();
@@ -247,7 +248,7 @@ class FigureController extends AbstractController
 
             $videos = $form->get('videos')->getData();
             $this->videoService->addVideo($videos, $figure); //on set les videos de la figure
-           
+
             $this->figureService->setFigureDetails($figure, false);
 
             $this->entityManager->persist($figure);
