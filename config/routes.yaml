@@ -6,16 +6,20 @@ controllers:
 
 home:
     path: /home
+    methods: [GET]
     controller: App\Controller\FigureController::index
     
 image_delete:
     path: /image/delete/{id}
+    methods: [DELETE]
     controller: App\Controller\ImageController::deleteImage
 
 videos_delete:
     path: /videos/delete/{id}
+    methods: [DELETE]
     controller: App\Controller\VideosController::deleteVideos
 
 index:
   path: /
+  methods: [GET]
   controller: App\Controller\FigureController::index
