@@ -8,6 +8,11 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+
+/**
+ * controller gérant les fixtures des videos
+ */
+
 class VideosFixtures extends Fixture implements OrderedFixtureInterface
 {
     private $slugger;
@@ -23,6 +28,12 @@ class VideosFixtures extends Fixture implements OrderedFixtureInterface
     {
         return 6;
     }
+
+    /**
+     * genère des videos fictives
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
 

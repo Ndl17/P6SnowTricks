@@ -7,6 +7,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * controller gérant les fixtures des groupes
+ */
+
 class GroupeFixtures extends Fixture implements OrderedFixtureInterface
 {
 
@@ -17,9 +21,13 @@ class GroupeFixtures extends Fixture implements OrderedFixtureInterface
         return 2;
     }
 
+    /**
+     * genère des groupes fictifs
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
-
         $data = [
             ['name' => 'Groupe 1'],
             ['name' => 'Groupe 2'],

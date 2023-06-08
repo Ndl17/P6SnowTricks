@@ -21,7 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/home', name:'home_')]
 /**
- * Summary of FigureController
+ * controller gérant les figures de l'application
+ * (affichage, ajout, modification, suppression)
  */
 class FigureController extends AbstractController
 {
@@ -50,8 +51,7 @@ class FigureController extends AbstractController
 
     #[Route('/', name:'index')]
     /**
-     * Summary of index
-     * @param FigureRepository $figureRepository
+     * Gère l'affichage de la page d'accueil
      * @return Response
      */
     public function index(): Response
@@ -82,9 +82,8 @@ class FigureController extends AbstractController
 
     #[Route('/ajout', name:'add')]
     /**
-     * Summary of addFig
+     * Gere l'ajout d'une figure
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function addFig(Request $request): Response
@@ -140,11 +139,10 @@ class FigureController extends AbstractController
 
     #[Route('/{slug}', name:'details')]
     /**
-     * Summary of detail
+     * gere l'affichage des details d'une figure
      * @param Figure $figure
      * @param CommentRepository $commentRepository
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function detail(Figure $figure, CommentRepository $commentRepository, Request $request): Response
@@ -181,10 +179,9 @@ class FigureController extends AbstractController
 
     #[Route('/{slug}/supprimer', name:'delete')]
     /**
-     * Summary of deleteFig
-     * @param Figure $figure
-     * @param EntityManagerInterface $entityManager
-     * @return Response
+     * gere la suppression d'une figure
+     * @param \App\Entity\Figure $figure
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteFig(Figure $figure): Response
     {
@@ -206,13 +203,14 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('home_index');
     }
 
-    /**
-     * Summary of editFig
-     * @param Figure $figure
-     * @param Request $request
-     * @return Response
-     */
+
     #[Route('/{slug}/edit', name:'edit')]
+    /**
+     * gere l'edition d'une figure
+     * @param mixed $slug
+     * @param \Symfony\Component\HttpFoundation\Request $request  
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function editFig(string $slug, Request $request): Response
     {
         // on verifie que l'utilisateur est connecté

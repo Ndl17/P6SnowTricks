@@ -4,11 +4,45 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-home:
-    path: /home
-    methods: [GET]
-    controller: App\Controller\FigureController::index
-    
+home_index: path: /
+  controller: App\Controller\FigureController::index
+  methods: [GET]
+
+home_add:
+  path: /ajout
+  controller: App\Controller\FigureController::addFig
+  methods: [GET|POST]
+
+home_details:
+  path: /{slug}
+  controller: App\Controller\FigureController::detail
+  methods: [GET|POST]
+
+home_delete:
+  path: /{slug}/supprimer
+  controller: App\Controller\FigureController::deleteFig
+  methods: [GET]
+
+home_edit:
+  path: /{slug}/edit
+  controller: App\Controller\FigureController::editFig
+  methods: [GET|POST]
+
+app_register:
+  path: /register
+  controller: App\Controller\RegistrationController::register
+  methods: [GET, POST]
+
+app_verify:
+  path: /verify/{token}
+  controller: App\Controller\RegistrationController::verify
+  methods: [GET]
+
+app_resend:
+  path: /resend
+  controller: App\Controller\RegistrationController::resend
+  methods: [GET]
+
 image_delete:
     path: /image/delete/{id}
     methods: [DELETE]
@@ -19,7 +53,22 @@ videos_delete:
     methods: [DELETE]
     controller: App\Controller\VideosController::deleteVideos
 
-index:
-  path: /
+app_login:
+  path: /login
+  controller: App\Controller\SecurityController::login
   methods: [GET]
-  controller: App\Controller\FigureController::index
+
+app_logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
+  methods: [GET]
+
+app_forgot:
+  path: /forgot
+  controller: App\Controller\SecurityController::forgotPassword
+  methods: [GET, POST]
+
+app_reset:
+  path: /reset/{token}
+  controller: App\Controller\SecurityController::resetPassword
+  methods: [GET, POST]

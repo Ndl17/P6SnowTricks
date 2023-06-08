@@ -11,11 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ImageController extends AbstractController
 {
 
-  
-    
     #[Route('/image/delete/{id}', name:'image_delete')]
     /**
-     * Summary of deleteImage
+     * gere la suppression d'une image
      * @param \App\Entity\Images $image
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
      * @return \Symfony\Component\HttpFoundation\Response

@@ -12,6 +12,10 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+/**
+ * controller gérant les fixtures des figures
+ */
+
 class FigureFixtures extends Fixture implements OrderedFixtureInterface
 {
     private $slugger;
@@ -29,6 +33,11 @@ class FigureFixtures extends Fixture implements OrderedFixtureInterface
         $this->slugger = $slugger;
     }
 
+    /**
+     * génère des figures fictives
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
 

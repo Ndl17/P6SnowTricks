@@ -10,6 +10,10 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
+/**
+ * controller gérant les fixtures des commentaires de l'application
+ */
+
 class CommentFixtures extends Fixture implements OrderedFixtureInterface
 {
 
@@ -21,6 +25,11 @@ class CommentFixtures extends Fixture implements OrderedFixtureInterface
         return 4;
     }
 
+    /**
+     * génère des commentaires fictifs
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         // use the factory to create a Faker\Generator instance
