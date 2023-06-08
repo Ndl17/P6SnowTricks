@@ -44,19 +44,10 @@ when@prod:
                 type: fingers_crossed
                 action_level: error
                 handler: nested
-                excluded_http_codes: [404, 405]
+                excluded_404s: true
                 buffer_size: 50
             nested:
                 type: stream
-                path: php://stderr
-                level: debug # Ajustez le niveau ici
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: error
                 formatter: monolog.formatter.json
-            console:
-                type: console
-                process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
-            deprecations:
-                type: stream
-                level: INFO
-                path: '%kernel.logs_dir%/deprecated.log'
-                channels: [php]
