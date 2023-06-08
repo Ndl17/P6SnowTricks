@@ -74,8 +74,7 @@ app_reset:
     controller: 'App\Controller\SecurityController::resetPassword'
     methods: ['GET', 'POST']
 
-
-index:
-  path: /
-  methods: [GET]
-  controller: App\Controller\FigureController::index
+home_index:
+    path: /
+    methods: [GET]
+    controller: App\Controller\FigureController::index
