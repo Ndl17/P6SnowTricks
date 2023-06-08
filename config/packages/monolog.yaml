@@ -57,9 +57,6 @@ when@prod:
                 channels: ["!event", "!doctrine"]
             deprecations:
                 type: stream
+                level: INFO
                 path: '%kernel.logs_dir%/deprecated.log'
-            deprecation_filter:
-                type: filter
-                handler: deprecation
-                max_level: info
-                channels: ["php"]
+                channels: [php]
