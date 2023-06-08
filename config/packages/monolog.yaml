@@ -51,4 +51,4 @@ when@prod:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: error
                 formatter: monolog.formatter.json
-                
+
