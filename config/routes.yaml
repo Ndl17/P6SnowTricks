@@ -7,27 +7,7 @@ controllers:
 home:
     path: /home
     methods: [GET]
-    controller: App\Controller\FigureController::index
-    
-home_add:
-    path: /ajout
-    controller: 'App\Controller\FigureController::addFig'
-    methods: ['GET', 'POST']
-
-home_details:
-    path: '/{slug}'
-    controller: 'App\Controller\FigureController::detail'
-    methods: ['GET', 'POST']
-
-home_delete:
-    path: '/{slug}/supprimer'
-    controller: 'App\Controller\FigureController::deleteFig'
-    methods: ['GET']
-
-home_edit:
-    path: '/{slug}/edit'
-    controller: 'App\Controller\FigureController::editFig'
-    methods: ['GET', 'POST']
+    controller: 'App\Controller\FigureController::index'
 
 app_register:
     path: /register
@@ -43,16 +23,6 @@ app_resend:
     path: /resend
     controller: 'App\Controller\RegistrationController::resend'
     methods: ['GET']
-
-image_delete:
-    path: '/image/delete/{id}'
-    methods: ['GET']
-    controller: 'App\Controller\ImageController::deleteImage'
-
-videos_delete:
-    path: '/videos/delete/{id}'
-    methods: ['GET']
-    controller: 'App\Controller\VideosController::deleteVideos'
 
 app_login:
     path: /login
@@ -74,7 +44,38 @@ app_reset:
     controller: 'App\Controller\SecurityController::resetPassword'
     methods: ['GET', 'POST']
 
+home_add:
+    path: /ajout
+    controller: 'App\Controller\FigureController::addFig'
+    methods: ['GET', 'POST']
+
+home_details:
+    path: '/{slug}'
+    controller: 'App\Controller\FigureController::detail'
+    methods: ['GET', 'POST']
+
+home_delete:
+    path: '/{slug}/supprimer'
+    controller: 'App\Controller\FigureController::deleteFig'
+    methods: ['GET']
+
+home_edit:
+    path: '/{slug}/edit'
+    controller: 'App\Controller\FigureController::editFig'
+    methods: ['GET', 'POST']
+
+
+image_delete:
+    path: '/image/delete/{id}'
+    methods: ['GET']
+    controller: 'App\Controller\ImageController::deleteImage'
+
+videos_delete:
+    path: '/videos/delete/{id}'
+    methods: ['GET']
+    controller: 'App\Controller\VideosController::deleteVideos'
+
 home_index:
     path: /
     methods: [GET]
-    controller: App\Controller\FigureController::index
+    controller: 'App\Controller\FigureController::index'
