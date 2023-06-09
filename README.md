@@ -2,6 +2,7 @@
 
 ## Score de qualité du code :
 [![SymfonyInsight](https://insight.symfony.com/projects/b43a3833-730b-4fa5-9fc5-13946ed90d06/big.svg)](https://insight.symfony.com/projects/b43a3833-730b-4fa5-9fc5-13946ed90d06)
+https://insight.symfony.com/projects/b43a3833-730b-4fa5-9fc5-13946ed90d06
 ## Informations :
 Thème du site choisi : Acorn - Bootstrap 5
 La version en ligne du site n’est pas encore disponible.
