@@ -20,7 +20,7 @@ class FigureCreationService
         $this->security = $security;
     }
 
-    public function setFigureDetails(Figure $figure, $isNew = false): void
+    public function setFigureDetails(Figure $figure, bool $isNew = false): void
     {
         $now = $this->dateTimeProviderService->getCurrentDateTime();
         $figure->setModifiedAt($now);

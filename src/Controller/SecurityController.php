@@ -16,15 +16,21 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * controller gérant la sécurité de l'application
+ */
+
 class SecurityController extends AbstractController
 {
     #[Route(path:'/login', name:'app_login')]
+    /**
+     * gere la connexion d'un utilisateur
+     * @param \Symfony\Component\Security\Http\Authentication\AuthenticationUtils $authenticationUtils
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
+      
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -40,12 +46,14 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path:'/forgot', name:'app_forgot')]
+
     /**
-     * Summary of forgotPassword
+     * gere la demande de réinitialisation de mot de passe
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \App\Repository\UserRepository $userRepository
      * @param \Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface $tokenGeneratorInterface
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \App\Service\SendMailService $mail
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function forgotPassword(Request $request, UserRepository $userRepository, TokenGeneratorInterface $tokenGeneratorInterface, EntityManagerInterface $entityManager, SendMailService $mail): Response
@@ -74,7 +82,7 @@ class SecurityController extends AbstractController
                     $context
 
                 );
-                //   dd($user);
+                
                 $this->addFlash('success', 'Un email de réinitialisation de mot de passe vous a été envoyé');
                 return $this->redirectToRoute('app_login');
 
@@ -92,11 +100,12 @@ class SecurityController extends AbstractController
 
     #[Route(path:'/reset/{token}', name:'app_reset')]
     /**
-     * Summary of resetPassword
+     *gere la réinitialisation du mot de passe
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \App\Repository\UserRepository $userRepository
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
-     * @param string $token
+     * @param mixed $token
+     * @param \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $passwordHasher
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function resetPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, string $token, UserPasswordHasherInterface $passwordHasher): Response

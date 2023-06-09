@@ -9,10 +9,10 @@ use App\Form\EditFigureFormType;
 use App\Form\FigureFormType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
-use App\Service\ImageCreationService;
-use App\Service\VideoCreationService;
 use App\Service\CommentCreationService;
 use App\Service\FigureCreationService;
+use App\Service\ImageCreationService;
+use App\Service\VideoCreationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/home', name:'home_')]
 /**
- * Summary of FigureController
+ * controller gérant les figures de l'application
+ * (affichage, ajout, modification, suppression)
  */
 class FigureController extends AbstractController
 {
@@ -33,14 +34,13 @@ class FigureController extends AbstractController
     private $entityManager;
 
     public function __construct(
-        ImageCreationService $imageService, 
-        VideoCreationService $videoService, 
-        CommentCreationService $commentService, 
+        ImageCreationService $imageService,
+        VideoCreationService $videoService,
+        CommentCreationService $commentService,
         FigureRepository $figureRepository,
         FigureCreationService $figureService,
         EntityManagerInterface $entityManager,
-        )
-    {
+    ) {
         $this->imageService = $imageService;
         $this->videoService = $videoService;
         $this->commentService = $commentService;
@@ -51,8 +51,7 @@ class FigureController extends AbstractController
 
     #[Route('/', name:'index')]
     /**
-     * Summary of index
-     * @param FigureRepository $figureRepository
+     * Gère l'affichage de la page d'accueil
      * @return Response
      */
     public function index(): Response
@@ -83,9 +82,8 @@ class FigureController extends AbstractController
 
     #[Route('/ajout', name:'add')]
     /**
-     * Summary of addFig
+     * Gere l'ajout d'une figure
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function addFig(Request $request): Response
@@ -123,9 +121,9 @@ class FigureController extends AbstractController
 
             //on fait appel au service pour ajouter les images
             $this->imageService->addImage($imageFiles, $figure);
-           
+
             $this->figureService->setFigureDetails($figure, true);
-    
+
             //on persiste et on flush
             $this->entityManager->persist($figure);
             $this->entityManager->flush();
@@ -141,11 +139,10 @@ class FigureController extends AbstractController
 
     #[Route('/{slug}', name:'details')]
     /**
-     * Summary of detail
+     * gere l'affichage des details d'une figure
      * @param Figure $figure
      * @param CommentRepository $commentRepository
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function detail(Figure $figure, CommentRepository $commentRepository, Request $request): Response
@@ -182,10 +179,9 @@ class FigureController extends AbstractController
 
     #[Route('/{slug}/supprimer', name:'delete')]
     /**
-     * Summary of deleteFig
-     * @param Figure $figure
-     * @param EntityManagerInterface $entityManager
-     * @return Response
+     * gere la suppression d'une figure
+     * @param \App\Entity\Figure $figure
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteFig(Figure $figure): Response
     {
@@ -207,15 +203,18 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('home_index');
     }
 
-    /**
-     * Summary of editFig
-     * @param Figure $figure
-     * @param Request $request
-     * @return Response
-     */
+
     #[Route('/{slug}/edit', name:'edit')]
-    public function editFig($slug, Request $request): Response
+    /**
+     * gere l'edition d'une figure
+     * @param mixed $slug
+     * @param \Symfony\Component\HttpFoundation\Request $request  
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editFig(string $slug, Request $request): Response
     {
+        // on verifie que l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('ROLE_USER');
         // Récupération de la figure à éditer depuis la base de données
         $figure = $this->figureRepository->findOneBy(['slug' => $slug]);
         $images = $figure->getImage();
@@ -247,7 +246,7 @@ class FigureController extends AbstractController
 
             $videos = $form->get('videos')->getData();
             $this->videoService->addVideo($videos, $figure); //on set les videos de la figure
-           
+
             $this->figureService->setFigureDetails($figure, false);
 
             $this->entityManager->persist($figure);

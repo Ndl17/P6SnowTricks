@@ -8,6 +8,10 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+/**
+ * controller gérant les fixtures des images
+ */
+
 class ImageFixtures extends Fixture implements OrderedFixtureInterface
 {
     private $slugger;
@@ -23,6 +27,12 @@ class ImageFixtures extends Fixture implements OrderedFixtureInterface
     {
         return 5;
     }
+
+    /**
+     * genère des images fictives
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
 

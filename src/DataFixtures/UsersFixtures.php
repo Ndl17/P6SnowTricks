@@ -8,6 +8,10 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
+/**
+ * controller gérant les fixtures des utilisateurs
+ */
+
 class UsersFixtures extends Fixture implements OrderedFixtureInterface
 {
 
@@ -17,6 +21,12 @@ class UsersFixtures extends Fixture implements OrderedFixtureInterface
     {
         return 1;
     }
+
+    /**
+     * genère des utilisateurs fictifs
+     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         // use the factory to create a Faker\Generator instance

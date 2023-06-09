@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Figure;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -24,7 +25,7 @@ class FigureVoter extends Voter
     $this->security = $security;
   }
 
-  protected function supports(string $attribute, $figure):bool{
+  protected function supports(string $attribute, mixed  $figure):bool{
     if (!in_array($attribute, [self::EDIT, self::DELETE, self::COMMENT])) {
       return false;
     }
@@ -35,7 +36,7 @@ class FigureVoter extends Voter
 
   }
 
-  protected function voteOnAttribute($attribute, $figure, TokenInterface $token):bool{
+  protected function voteOnAttribute(string $attribute, mixed  $figure, TokenInterface $token):bool{
     $user =  $token->getUser();
     if (!$user instanceof UserInterface) {
       return false;
@@ -43,5 +44,6 @@ class FigureVoter extends Voter
     if ($this->security->isGranted('ROLE_USER')) {
       return true;
     }
+    return false;
   }
 }

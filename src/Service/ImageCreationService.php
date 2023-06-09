@@ -18,7 +18,7 @@ class ImageCreationService
         $this->slugger = $slugger;
     }
 
-    public function addImage(array $images,Figure $figure) {
+    public function addImage(array $images,Figure $figure) : void {
         foreach ($images as $image) {
           if ($image) {
             $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);

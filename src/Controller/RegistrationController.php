@@ -16,6 +16,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
+/**
+ * controller gérant le formulaire d'inscription
+ */
+
 class RegistrationController extends AbstractController
 {
 
@@ -23,7 +27,6 @@ class RegistrationController extends AbstractController
     private $userRepository;
     private $mail;
     private $jwt;
-    private $figureService;
     private $entityManager;
 
     public function __construct(
@@ -45,7 +48,7 @@ class RegistrationController extends AbstractController
     #[Route('/register', name:'app_register')]
 
     /**
-     * Summary of register
+     * gere l'inscription d'un utilisateur
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $userPasswordHasher
      * @param \Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface $userAuthenticator
@@ -82,7 +85,7 @@ class RegistrationController extends AbstractController
             ];
             // on génere le token
 
-            $token =  $this->jwt->generate($header, $payload, $_ENV['JWT_SECRET']);
+            $token =  $this->jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
             // on envoie le mail de confirmation
 
             $this->mail->send('noreply@snowtricks.com',
@@ -101,9 +104,8 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/{token}', name:'app_verify')]
-
     /**
-     * Summary of verify
+     *gere la vérification du token
      * @param mixed $token
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -134,9 +136,8 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/resend', name:'app_resend')]
-
     /**
-     * Summary of resend
+     * gere le renvoi du mail de confirmation
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function resend(): Response

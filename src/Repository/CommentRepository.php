@@ -42,7 +42,7 @@ class CommentRepository extends ServiceEntityRepository
 
 
 
-  public function findCommentsByFigurePaginated($figureId, $page = 1, $limit = 10)
+  public function findCommentsByFigurePaginated(int $figureId, int $page = 1, int $limit = 10): array
   {
     $limit = abs($limit);
     $qb = $this->createQueryBuilder('c');
