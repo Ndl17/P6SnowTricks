@@ -16,7 +16,7 @@ La version en ligne du site n’est pas encore disponible.
 
 #### Utilisateur Non Vérifié :
 * Identifiant : user
-* Mot de Passe : 12345
+* Mot de Passe : 123456
 
 
 ## Prérequis :
